@@ -10,6 +10,7 @@ import user.User;
 public class GameCenter implements GmaeCenterInterface{
    private  ConcurrentLinkedQueue<User> users;
    private ConcurrentLinkedQueue<Game> games;
+   public static int NumberOfPlayersInGame =8;
    private static GmaeCenterInterface singleton = new GameCenter( );
    
    public static GmaeCenterInterface getInstance( ) {
@@ -47,8 +48,42 @@ public class GameCenter implements GmaeCenterInterface{
     */
    public LinkedList<Game> Search(String playerName,int potSize){
 	   
-	   
-	   return null;
+	  LinkedList<Game> can_join = new LinkedList<Game>();
+	  if(playerName.equals("")&& potSize==-1){
+		  for(Game i_game : games){
+			 can_join.add(i_game);			 
+		  }
+	  }
+	  else if(playerName.equals("")&& potSize!=-1){
+		  for(Game i_game : games){
+			  if(i_game.getPlayerNumber()==potSize){
+				 can_join.add(i_game);	
+			  }
+		  }
+		  
+	  }else if(!playerName.equals("")&& potSize==-1){
+		  for(Game i_game : games){			 
+			  Player [] players = i_game.getPlayers();
+			  for(Player p : players){
+				 if(p.getUser().getName().equals(playerName)){
+					  can_join.add(i_game);
+				 }
+			  }
+		  }
+		  
+		  
+	  }else{
+		  for(Game i_game : games){			 
+			  Player [] players = i_game.getPlayers();
+			  for(Player p : players){
+				 if(p.getUser().getName().equals(playerName) && i_game.getPlayerNumber()==potSize){
+					  can_join.add(i_game);
+				 }
+			  }
+		  }
+	  }
+		  
+	  return  can_join;
    }
    
    public boolean joinGame(Game game, Player player){
