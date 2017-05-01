@@ -2,6 +2,7 @@ package System;
 
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +14,7 @@ public class GameCenter implements GmaeCenterInterface{
    private  ConcurrentLinkedQueue<User> users;
    private ConcurrentLinkedQueue<Game> games;
    private static GmaeCenterInterface singleton = new GameCenter( );
+   private final static Logger LOGGER = Logger.getLogger(GameCenter.class.getName());
    
    public static GmaeCenterInterface getInstance( ) {
 	      return singleton;
@@ -40,20 +42,28 @@ public class GameCenter implements GmaeCenterInterface{
    * this function get all the details of unregistered user, check them under the game policy, if there is'nt problem with one or more of the details make a new user and add him to the system
    *  @return true if the user can register to the system, else return false;
    */
-   public void register(String ID, String password, String name, String email) throws Exception
+   public boolean register(String ID, String password, String name, String email) 
    {
 	   User newUser;
 
 	   for (User usr : users) {
 		     if(usr.getID().equals(ID))
-		    	 throw new Exception("Error: this ID already exist in the system");
+		    	 LOGGER.warning("Error: this ID already exist in the system");
+		         return false;
 		    }
 	   if(!isValidEmailAddress(email))
-		   throw new Exception("Error: invalid email address");
+		   {
+		    LOGGER.warning("Error: invalid email address");
+		    return false;
+		   }
 	   if(password.length()<8)
-		   throw new Exception("Error: the password is too short");
+		   {
+		     LOGGER.warning("Error: the password is too short");
+		     return false;
+		   }
 	   newUser=new User(ID, password, name, email, 0, 0);
 	   addUser(newUser);
+	   return true;
    }
    
    public void addUser(User user){
@@ -94,11 +104,17 @@ public class GameCenter implements GmaeCenterInterface{
    
 
 @Override
-public void editUserPassword(String userID, String newPassword)throws Exception {
+public boolean editUserPassword(String userID, String newPassword) {
 	if(newPassword.isEmpty())
-		throw new Exception("Error: empty password is invalid");
+		{
+		  LOGGER.warning("Error: empty password is invalid");
+		  return false;
+		}
 	if(newPassword.length()<8)
-		throw new Exception("Error: the password is too short");
+		{
+		  LOGGER.warning("Error: the password is too short");
+		  return false;
+		}
 	
 	for (User usr : users) {
 	     if(usr.getID().equals(userID))
@@ -107,12 +123,16 @@ public void editUserPassword(String userID, String newPassword)throws Exception 
 	    	break;
 	     }
 	    }
+	return true;
 }
 
 @Override
-public void editUserName(String userID, String newName)throws Exception {
+public boolean editUserName(String userID, String newName) {
 	if(newName.isEmpty())
-		throw new Exception("Error: empty name is invalid");
+		{
+		  LOGGER.warning("Error: empty name is invalid");
+		  return false;
+		}
 	
 	for (User usr : users) {
 	     if(usr.getID().equals(userID))
@@ -121,15 +141,21 @@ public void editUserName(String userID, String newName)throws Exception {
 	    	break;
 	     }
 	    }
-	
+	return true;
 }
 
 @Override
-public void editUserEmail(String userID, String newEmail)throws Exception {
+public boolean editUserEmail(String userID, String newEmail) {
 	if(newEmail.isEmpty())
-		throw new Exception("Error: empty email is invalid");
+		{
+		  LOGGER.warning("Error: empty email is invalid");
+		  return false;
+		}
 	if(!isValidEmailAddress(newEmail))
-		   throw new Exception("Error: invalid email address");
+	{    
+		LOGGER.warning("Error: invalid email address");
+		 return false;
+	}
 	
 	for (User usr : users) {
 	     if(usr.getID().equals(userID))
@@ -138,7 +164,7 @@ public void editUserEmail(String userID, String newEmail)throws Exception {
 	    	break;
 	     }
 	    }
-	
-}  
+	return true;
+}
    
 }

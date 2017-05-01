@@ -13,7 +13,7 @@ public interface GmaeCenterInterface {
 	 * 
 	 *this function get all the details of unregistered user, check them under the game policy, if there is'nt problem with one or more of the details make a new user and add him to the system
 	 */
-	   public void register(String ID, String password, String name, String email)throws Exception;
+	   public boolean register(String ID, String password, String name, String email);
 	
 	   public void addUser(User user);
 	   
@@ -34,9 +34,9 @@ public interface GmaeCenterInterface {
 	   
 	   public boolean joinGame(Game game, Player player);
 	   
-	   public void editUserPassword(String userID, String newPassword)throws Exception;
+	   public boolean editUserPassword(String userID, String newPassword);
 		
-		public void editUserName(String userID, String newName)throws Exception;
+		public boolean editUserName(String userID, String newName);
 		
-		public void editUserEmail(String userID, String newEmail)throws Exception;
+		public boolean editUserEmail(String userID, String newEmail);
 }
