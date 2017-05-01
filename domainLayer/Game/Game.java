@@ -11,18 +11,20 @@ public class Game implements GameInterface,Runnable{
 	private Player[] players;
 	private Deck deck;
 	private int minBid;
-	private int playerNumber;
+	private int playersNumber;
 	private int GameID;
+	private boolean isActive;
+	private int CurrentBet;
 	public Game(Player Creator,int minBid,int GameID){
 		players = new Player[8];
 		this.GameID = GameID;
 		deck = new Deck();
 		deck.shuffle();
-		
+		isActive = false;
 		this.minBid = minBid;
 		players[0] = Creator;
-		playerNumber = 1;
-		
+		playersNumber = 1;
+		CurrentBet = 0;
 	}
 	/**
 	 * This method Used by GameCenter to add new player to the game
@@ -30,8 +32,13 @@ public class Game implements GameInterface,Runnable{
 	 * @return true if this player can join the Game, else (there's more than 8 players, or his cash not enough) return false
 	 */
 	public boolean joinGame(Player player){
-		
-		
+		if(playersNumber < 8)
+		{   if(player.getCash() < minBid) return false;
+			players[playersNumber] = player;
+			playersNumber++;
+			return true;
+			
+		}
 		return false;
 	}
 	
@@ -56,9 +63,32 @@ public class Game implements GameInterface,Runnable{
 		return false;
 	}
 	
+	private boolean dealCardsForPlayers(){
+		for(int i=0;i<playersNumber; i++ ){
+			Card card1 = deck.getCard();
+			Card card2 = deck.getCard();
+			if(card1 == null || card2 == null) return false;
+			players[i].giveCards(card1, card2);
+			
+		}
+		if (playersNumber <2) return false; 
+		return true;
+	}
+	
+	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		
+		while(playersNumber > 0){
+			
+			while (playersNumber > 1){
+				dealCardsForPlayers();
+				
+			}
+			
+			
+			
+		}
 		
 	}
 	

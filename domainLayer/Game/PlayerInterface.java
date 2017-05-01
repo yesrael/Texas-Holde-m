@@ -48,4 +48,6 @@ public interface PlayerInterface {
 	 
 	 
 	 public int getCash();
+	 
+	 public Card[] getCards();
 }
