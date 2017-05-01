@@ -16,7 +16,8 @@ public interface UserInterface {
 
 	public boolean fold();
 
-
+	public String getName();
+	public int geTotalCash();
 	public boolean check();
 
 	public boolean bet(int money);

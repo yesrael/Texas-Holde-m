@@ -3,6 +3,8 @@ package System;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import com.sun.istack.internal.logging.Logger;
+
 import Game.Game;
 import Game.Player;
 import user.User;
@@ -10,8 +12,9 @@ import user.User;
 public class GameCenter implements GmaeCenterInterface{
    private  ConcurrentLinkedQueue<User> users;
    private ConcurrentLinkedQueue<Game> games;
-   public static int NumberOfPlayersInGame =8;
+
    private static GmaeCenterInterface singleton = new GameCenter( );
+   private LinkedList<GameLogs> game_logs;
    
    public static GmaeCenterInterface getInstance( ) {
 	      return singleton;
@@ -20,12 +23,34 @@ public class GameCenter implements GmaeCenterInterface{
    private GameCenter(){
 	   users = new ConcurrentLinkedQueue<User>();
 	   games= new ConcurrentLinkedQueue<Game>();
+	   game_logs = new  LinkedList<GameLogs>();
    }
    
    public void addUser(User user){
 	   
 	   users.add(user);
 	   
+   }
+   public void saveFavoriteGame(int GameID){
+	   
+	   for(Game i_game : games){
+		   if(i_game.getGameID()==GameID)
+			   game_logs.add(i_game.getGameLog());			   
+		   
+	   }
+   }
+public void replaySavedTurn(int GameID){
+	   
+	   for(GameLogs i_game_logs : game_logs){
+		   if(i_game_logs.getGameID()==GameID){
+			   Logger my_log = Logger.getLogger(GameCenter.class);
+			   for(String s :i_game_logs.getLog()){
+				   my_log.info(s);
+			   }
+		   }
+			   			   
+		   
+	   }
    }
    
    /**

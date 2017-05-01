@@ -20,12 +20,18 @@ public User(String ID, String name,int totalCash,int score){
 	this.score = score;
 	
 }
-
+public String getName(){
+	return name;
+}
+public int geTotalCash(){
+	return totalCash;
+}
 
 public void GameUpdated(){
 	 
 	 
 }
+
 
 
 
