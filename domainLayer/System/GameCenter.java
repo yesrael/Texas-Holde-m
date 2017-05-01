@@ -8,6 +8,7 @@ import com.sun.istack.internal.logging.Logger;
 import Game.Game;
 import Game.Player;
 import user.User;
+import user.UserInterface;
 
 public class GameCenter implements GmaeCenterInterface{
    private  ConcurrentLinkedQueue<User> users;
@@ -39,19 +40,26 @@ public class GameCenter implements GmaeCenterInterface{
 		   
 	   }
    }
-public void replaySavedTurn(int GameID){
+public void replaySavedTurn(int GameID, UserInterface user){
 	   
 	   for(GameLogs i_game_logs : game_logs){
 		   if(i_game_logs.getGameID()==GameID){
-			   Logger my_log = Logger.getLogger(GameCenter.class);
-			   for(String s :i_game_logs.getLog()){
-				   my_log.info(s);
-			   }
+			   user.getLog(i_game_logs.getLog());
 		   }
 			   			   
 		   
 	   }
    }
+public void addUserToSpectatingGame (int GameID, UserInterface user){
+	   
+	   for(Game i_game : games){
+		   if(i_game.getGameID()==GameID){
+			  i_game.AddUserToWatch(user);
+		   }
+			   			   
+		   
+	   }
+}
    
    /**
     * in this function please see the Create game requirment in the Assignment 1 and add the relevant params according to the game preferences, 

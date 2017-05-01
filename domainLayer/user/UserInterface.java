@@ -23,6 +23,8 @@ public interface UserInterface {
 	public boolean bet(int money);
 
 	public boolean leaveGame();
+	public void getLog(LinkedList<String> i_game_logs);
+	public void getLog(String i_game_logs);
 
 
 	public boolean giveMoney(int money);
