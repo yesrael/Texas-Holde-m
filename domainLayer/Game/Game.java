@@ -35,28 +35,27 @@ public class Game implements GameInterface,Runnable{
 		return false;
 	}
 	
-	@Override
 	public boolean fold(Player player) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	@Override
+	
 	public boolean check(Player player) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	@Override
+	
 	public boolean bet(Player player, int money) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	@Override
+	
 	public boolean leaveGame(Player player) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 	
-	@Override
+	
 	public void run() {
 		// TODO Auto-generated method stub
 		

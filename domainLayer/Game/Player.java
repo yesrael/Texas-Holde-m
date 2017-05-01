@@ -88,7 +88,7 @@ public class Player implements PlayerInterface{
 		 return false;
 	 }
 
-	@Override
+	
 	public int getCash() {
 	return cash;
 	}

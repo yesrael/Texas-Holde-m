@@ -20,8 +20,6 @@ public class Deck implements DeckInterface{
 	   
    }
    
-   
-	@Override
 	public void shuffle() {
 	    int newI;
 	    Card temp;
@@ -40,7 +38,6 @@ public class Deck implements DeckInterface{
 	}
 
 
-	@Override
 	public Card getCard() {
 		currentCardPlace++;
 		if(currentCardPlace <=52)
