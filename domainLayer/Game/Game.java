@@ -19,26 +19,30 @@ public class Game implements GameInterface,Runnable{
 	private Deck deck;	
 	private int num_of_want_to_join;
 	private int minBid;
-	private int playerNumber;
+	private int playersNumber;
 	private int GameID;
+	private boolean isActive;
+	private int CurrentBet;
 	private LinkedList<UserInterface> user_waches;
 	GameLogs log_game;
+
 	public Game(Player Creator,int minBid,int GameID){
 		players = new Player[8];
 		WantToJoinPlayers= new Player[8];
 		this.GameID = GameID;
 		deck = new Deck();
 		deck.shuffle();
-		num_of_want_to_join =0;
+		isActive = false;
 		this.minBid = minBid;
 		players[0] = Creator;
-		playerNumber = 1;
+		playersNumber = 1;
+		CurrentBet = 0;
+		num_of_want_to_join =0;
 		log_game = new  GameLogs(GameID);
 		user_waches = new LinkedList<UserInterface>();
-		
 	}
 	public int getPlayerNumber(){
-		return playerNumber;
+		return playersNumber;
 	}
 	public int getMinBid(){
 		return minBid;
@@ -64,8 +68,7 @@ public class Game implements GameInterface,Runnable{
 	 * @return true if this player can join the Game, else (there's more than 8 players, or his cash not enough) return false
 	 */
 	public boolean joinGame(Player player){
-		
-		if(playerNumber+num_of_want_to_join<8){
+		if(playersNumber+num_of_want_to_join<8){
 			if(player.getUser().geTotalCash()>=minBid){
 				WantToJoinPlayers[num_of_want_to_join]=player;
 				return true;
@@ -94,16 +97,39 @@ public class Game implements GameInterface,Runnable{
 		for(Player p : players){
 			if(p.equals(player)){
 				p = null;
-				playerNumber--;
+				playersNumber--;
 				return true;
 			}
 		}
 		return false;
 	}
 	
+	private boolean dealCardsForPlayers(){
+		for(int i=0;i<playersNumber; i++ ){
+			Card card1 = deck.getCard();
+			Card card2 = deck.getCard();
+			if(card1 == null || card2 == null) return false;
+			players[i].giveCards(card1, card2);
+			
+		}
+		if (playersNumber <2) return false; 
+		return true;
+	}
+	
+	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		
+		while(playersNumber > 0){
+			
+			while (playersNumber > 1){
+				dealCardsForPlayers();
+				
+			}
+			
+			
+			
+		}
 		
 	}
 	
