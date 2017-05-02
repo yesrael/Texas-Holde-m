@@ -18,8 +18,9 @@ public class User implements UserInterface {
 	private LinkedList<Player> inGamePlayers;
 	private int totalCash;
 	private int score;
+	private UserStatus status;
 	Logger my_log;
-	
+
 	public User(String ID, String password, String name, String email, int totalCash, int score){
 		this.ID = ID;
 		this.password=password;
@@ -27,32 +28,19 @@ public class User implements UserInterface {
 		this.email = email;
 		this.totalCash = totalCash;
 		this.score = score;
+		status = UserStatus.DISCONNECTED;
 		my_log = Logger.getLogger(User.class);
-		
 	}
 	
 	public String getName(){
 		return name;
 	}
 	  
+
 	public int geTotalCash(){
 		return totalCash;
 	}
-	
-	public void getLog(LinkedList<String> i_game_logs){
-		
-		   for(String s :i_game_logs){
-			   my_log.info(s);
-		   }
-	}
-	
-	public void getLog(String  i_game_logs){
-		 
-		  
-		 my_log.info(i_game_logs);
-		  
-	}
-	
+
 	public String toString()
 	{
 		return "ID: "+ID+"\n"+"name: "+name+"\n";
@@ -60,19 +48,24 @@ public class User implements UserInterface {
 	
 	public String getID()
 	{
-		return ID;
+		return this.ID;
 	}
 	
 	public String getEmail()
 	{
-		return email;
+		return this.email;
 	}
 	
 	public String getPassword()
 	{
-		return password;
+		return this.password;
 	}
 	
+	public UserStatus getStatus()
+	{
+		return this.status;
+	}
+	  
 	public void GameUpdated(){
 		 
 	}
@@ -132,20 +125,41 @@ public class User implements UserInterface {
 		   return false;
 	}
 	
-	
 	public void editPassword(String newPassword) {
-		this.password=newPassword;
+		this.password = newPassword;
+	}
+	
+	public void getLog(LinkedList<String> i_game_logs){
 		
+		   for(String s :i_game_logs){
+			   my_log.info(s);
+		   }
+	}
+	
+	public void getLog(String  i_game_logs){
+		 
+		  
+		 my_log.info(i_game_logs);
+		  
 	}
 	
 	public void editName(String newName) {
-		this.name=newName;
+		this.name = newName;
 		
 	}
 	
 	public void editEmail(String newEmail) {
-		this.email=newEmail;
+		this.email = newEmail;
 		
+	}
+
+	public void login() {
+		this.status = UserStatus.CONNECTED;
+	}
+	
+	
+	public void logout() {
+		this.status = UserStatus.DISCONNECTED;
 	}
 
 }

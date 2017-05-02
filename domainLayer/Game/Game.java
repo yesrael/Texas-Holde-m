@@ -22,6 +22,8 @@ public class Game implements GameInterface,Runnable{
 	private GamePreferences preferences;
 	private int playerNumber;
 	private int GameID;
+	private boolean isActive;
+	private int CurrentBet;
 	private LinkedList<UserInterface> user_waches;
 	GameLogs log_game;
 	
@@ -37,11 +39,10 @@ public class Game implements GameInterface,Runnable{
 		playerNumber = 1;
 		log_game = new  GameLogs(GameID);
 		user_waches = new LinkedList<UserInterface>();
-		
 	}
 	
 	public int getPlayerNumber(){
-		return playerNumber;
+		return players.size();
 	}
 	
 	public int getMinBid(){
@@ -111,10 +112,21 @@ public class Game implements GameInterface,Runnable{
 			return players.removeFirstOccurrence(player);
 		}
 	}
-	
+
+	private boolean dealCardsForPlayers(){
+		for(int i=0;i < players.size(); i++ ){
+			Card card1 = deck.getCard();
+			Card card2 = deck.getCard();
+			if(card1 == null || card2 == null) return false;
+			players.get(i).giveCards(card1, card2);
+			
+		}
+		if (players.size() <2) return false; 
+		return true;
+	}
 	
 	public void run() {
-		// TODO Auto-generated method stub
+
 		
 	}
 }
