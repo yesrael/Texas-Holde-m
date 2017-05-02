@@ -9,6 +9,12 @@ import user.User;
 public interface GmaeCenterInterface {
 
 	
+	/**
+	 * 
+	 *this function get all the details of unregistered user, check them under the game policy, if there is'nt problem with one or more of the details make a new user and add him to the system
+	 */
+	   public boolean register(String ID, String password, String name, String email);
+	
 	   public void addUser(User user);
 	   
 	   /**
@@ -27,4 +33,10 @@ public interface GmaeCenterInterface {
 	   public LinkedList<Game> Search(String playerName,int potSize);
 	   
 	   public boolean joinGame(Game game, Player player);
+	   
+	   public boolean editUserPassword(String userID, String newPassword);
+		
+		public boolean editUserName(String userID, String newName);
+		
+		public boolean editUserEmail(String userID, String newEmail);
 }
