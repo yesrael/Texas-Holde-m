@@ -1,5 +1,6 @@
 package user;
 
 public enum UserStatus {
-	CONNECTED, DISCONNECTED
+ CONNECTED, DISCONNECTED
 }
+

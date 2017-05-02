@@ -32,7 +32,7 @@ public class Player implements PlayerInterface{
 	  * This method will be used by the Game to tell the player that the game updated, The player object will notify the user for this to update him
 	  */
 	 public void GameUpdated(){
-		 
+		 User.GameUpdated();
 		 
 	 }
 	 
@@ -43,9 +43,8 @@ public class Player implements PlayerInterface{
 	  * @return true if the action was performed , else return false
 	  */
 	 public boolean takeAction(){
+		 return User.takeAction();
 		 
-		 
-		 return false;
 	 }
 	 
 	 /**
@@ -53,8 +52,10 @@ public class Player implements PlayerInterface{
 	  * @return true if the player can do this action in the current time, else  (this is not his turn, or he is not playing)return false
 	  */
 	 public boolean fold(){
+		 if(Game!=null)return  Game.fold(this);
+		 else return false;
 		 
-		 return false;
+		 
 	 }
 	 
 	 /**
@@ -62,23 +63,26 @@ public class Player implements PlayerInterface{
 	  * @return true if the player can do this action in the current time, else  (this is not his turn, or he is not playing, or there's another player batted)return false
 	  */
 	 public boolean check(){
-		 
-		 return false;
+		 if(Game!=null)return  Game.check(this);
+		 else return false;
+
 	 }
 	 /**
 	  * this method will be used by the user to make bet action, the player object will notify the game for this
 	  * @return true if the player can do this action in the current time, else  (this is not his turn, or he is not playing, or there's another player batted more the @money, or he hasn't this amount of money)return false
 	  */
 	 public boolean bet(int money){
-		 
-		 return false;
+		
+		 if(Game!=null) return Game.bet(this,money);
+		 else return false;
+
 	 }
 	 /**
 	  * this method will be used by the user to make leaveGame action, the player object will notify the game for this
 	  * @return true if the player can do this action in the current time, else return false
 	  */
 	 public boolean leaveGame(){
-		 
+		 Game.leaveGame(this);
 		 return false;
 	 }
 	 
@@ -87,8 +91,8 @@ public class Player implements PlayerInterface{
 	  * @return true if the action was performed , else return false
 	  */
 	 public boolean giveMoney(int money){
-		 
-		 return false;
+		 cash += money;
+		 return User.giveMoney(money);
 	 }
 
 	
@@ -101,6 +105,16 @@ public class Player implements PlayerInterface{
 		return hand;
 	}
 
+	
+	public boolean takeMoney(int money) {
+		if(money > cash) 
+		return false;
+		cash -=money;
+		return true;
+	}
+	
+	public GameInterface getGame() {
+		return Game;
+	}
 
-	 
 }
