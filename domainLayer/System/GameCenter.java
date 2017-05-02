@@ -6,14 +6,19 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.sun.istack.internal.logging.Logger;
+
 import Game.Game;
 import Game.Player;
 import user.User;
+import user.UserInterface;
 
 public class GameCenter implements GmaeCenterInterface{
    private  ConcurrentLinkedQueue<User> users;
    private ConcurrentLinkedQueue<Game> games;
+
    private static GmaeCenterInterface singleton = new GameCenter( );
+   private LinkedList<GameLogs> game_logs;
    private final static Logger LOGGER = Logger.getLogger(GameCenter.class.getName());
    
    public static GmaeCenterInterface getInstance( ) {
@@ -23,6 +28,7 @@ public class GameCenter implements GmaeCenterInterface{
    private GameCenter(){
 	   users = new ConcurrentLinkedQueue<User>();
 	   games= new ConcurrentLinkedQueue<Game>();
+	   game_logs = new  LinkedList<GameLogs>();
    }
    
    /**
@@ -71,6 +77,34 @@ public class GameCenter implements GmaeCenterInterface{
 	   users.add(user);
 	   
    }
+   public void saveFavoriteGame(int GameID){
+	   
+	   for(Game i_game : games){
+		   if(i_game.getGameID()==GameID)
+			   game_logs.add(i_game.getGameLog());			   
+		   
+	   }
+   }
+public void replaySavedTurn(int GameID, UserInterface user){
+	   
+	   for(GameLogs i_game_logs : game_logs){
+		   if(i_game_logs.getGameID()==GameID){
+			   user.getLog(i_game_logs.getLog());
+		   }
+			   			   
+		   
+	   }
+   }
+public void addUserToSpectatingGame (int GameID, UserInterface user){
+	   
+	   for(Game i_game : games){
+		   if(i_game.getGameID()==GameID){
+			  i_game.AddUserToWatch(user);
+		   }
+			   			   
+		   
+	   }
+}
    
    
    /**
@@ -93,8 +127,42 @@ public class GameCenter implements GmaeCenterInterface{
     */
    public LinkedList<Game> Search(String playerName,int potSize){
 	   
-	   
-	   return null;
+	  LinkedList<Game> can_join = new LinkedList<Game>();
+	  if(playerName.equals("")&& potSize==-1){
+		  for(Game i_game : games){
+			 can_join.add(i_game);			 
+		  }
+	  }
+	  else if(playerName.equals("")&& potSize!=-1){
+		  for(Game i_game : games){
+			  if(i_game.getPlayerNumber()==potSize){
+				 can_join.add(i_game);	
+			  }
+		  }
+		  
+	  }else if(!playerName.equals("")&& potSize==-1){
+		  for(Game i_game : games){			 
+			  Player [] players = i_game.getPlayers();
+			  for(Player p : players){
+				 if(p.getUser().getName().equals(playerName)){
+					  can_join.add(i_game);
+				 }
+			  }
+		  }
+		  
+		  
+	  }else{
+		  for(Game i_game : games){			 
+			  Player [] players = i_game.getPlayers();
+			  for(Player p : players){
+				 if(p.getUser().getName().equals(playerName) && i_game.getPlayerNumber()==potSize){
+					  can_join.add(i_game);
+				 }
+			  }
+		  }
+	  }
+		  
+	  return  can_join;
    }
    
    public boolean joinGame(Game game, Player player){

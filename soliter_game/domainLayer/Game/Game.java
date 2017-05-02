@@ -2,7 +2,6 @@ package Game;
 
 import java.util.LinkedList;
 
-import user.UserInterface;
 import System.GameLogs;
 
 
@@ -21,7 +20,7 @@ public class Game implements GameInterface,Runnable{
 	private int minBid;
 	private int playerNumber;
 	private int GameID;
-	private LinkedList<UserInterface> user_waches;
+	private LinkedList<Player> user_waches;
 	GameLogs log_game;
 	public Game(Player Creator,int minBid,int GameID){
 		players = new Player[8];
@@ -34,7 +33,7 @@ public class Game implements GameInterface,Runnable{
 		players[0] = Creator;
 		playerNumber = 1;
 		log_game = new  GameLogs(GameID);
-		user_waches = new LinkedList<UserInterface>();
+		user_waches = new LinkedList<Player>();
 		
 	}
 	public int getPlayerNumber(){
@@ -55,7 +54,7 @@ public class Game implements GameInterface,Runnable{
 	public Player [] getWantToJoinPlayers(){
 		return WantToJoinPlayers;
 	}
-	public void AddUserToWatch(UserInterface p){
+	public void AddUserPlaer(Player p){
 		user_waches.add(p);
 	}
 	/**
