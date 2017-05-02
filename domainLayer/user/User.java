@@ -18,6 +18,7 @@ private String password;
 private LinkedList<Player> inGamePlayers;
 private int totalCash;
 private int score;
+private UserStatus status;
 Logger my_log;
 
 public User(String ID, String password, String name, String email, int totalCash, int score){
@@ -27,6 +28,7 @@ public User(String ID, String password, String name, String email, int totalCash
 	this.email = email;
 	this.totalCash = totalCash;
 	this.score = score;
+	status=UserStatus.DISCONNECTED;
 	my_log = Logger.getLogger(User.class);
 	
 }
@@ -50,7 +52,6 @@ public void getLog(String  i_game_logs){
 	 
 	  
 	 my_log.info(i_game_logs);
-	  
 }
 
 public String toString()
@@ -60,19 +61,24 @@ public String toString()
 
 public String getID()
 {
-	return ID;
+	return this.ID;
 }
 
 public String getEmail()
 {
-	return email;
+	return this.email;
 }
 
 public String getPassword()
 {
-	return password;
+	return this.password;
 }
 
+public UserStatus getStatus()
+{
+	return this.status;
+}
+  
 public void GameUpdated(){
 	 
 }
@@ -145,6 +151,16 @@ public void editName(String newName) {
 public void editEmail(String newEmail) {
 	this.email=newEmail;
 	
+}
+
+@Override
+public void login() {
+	this.status=UserStatus.CONNECTED;
+}
+
+@Override
+public void logout() {
+	this.status=UserStatus.DISCONNECTED;
 }
 
 }
