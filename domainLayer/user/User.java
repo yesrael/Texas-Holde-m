@@ -13,31 +13,39 @@ public class User implements UserInterface {
 	
 private	String ID;
 private String name;
+private String email;
+private String password;
 private LinkedList<Player> inGamePlayers;
 private int totalCash;
 private int score;
 Logger my_log;
 
-public User(String ID, String name,int totalCash,int score){
+public User(String ID, String password, String name, String email, int totalCash, int score){
 	this.ID = ID;
+	this.password=password;
 	this.name = name;
+	this.email = email;
 	this.totalCash = totalCash;
 	this.score = score;
 	my_log = Logger.getLogger(User.class);
 	
 }
+
 public String getName(){
 	return name;
 }
+  
 public int geTotalCash(){
 	return totalCash;
 }
+
 public void getLog(LinkedList<String> i_game_logs){
 	
 	   for(String s :i_game_logs){
 		   my_log.info(s);
 	   }
 }
+
 public void getLog(String  i_game_logs){
 	 
 	  
@@ -45,13 +53,29 @@ public void getLog(String  i_game_logs){
 	  
 }
 
-public void GameUpdated(){
-	 
-	 
+public String toString()
+{
+	return "ID: "+ID+"\n"+"name: "+name+"\n";
 }
 
+public String getID()
+{
+	return ID;
+}
 
+public String getEmail()
+{
+	return email;
+}
 
+public String getPassword()
+{
+	return password;
+}
+
+public void GameUpdated(){
+	 
+}
 
 public boolean takeAction(){
 	 
@@ -106,6 +130,21 @@ public LinkedList<Game> Search(String playerName,int potSize){
 public boolean joinGame(Game game, Player player){
 	   
 	   return false;
+}
+
+public void editPassword(String newPassword) {
+	this.password=newPassword;
+	
+}
+
+public void editName(String newName) {
+	this.name=newName;
+	
+}
+
+public void editEmail(String newEmail) {
+	this.email=newEmail;
+	
 }
 
 }
