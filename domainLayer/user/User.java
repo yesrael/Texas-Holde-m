@@ -14,6 +14,7 @@ private String password;
 private LinkedList<Player> inGamePlayers;
 private int totalCash;
 private int score;
+private UserStatus status;
 
 public User(String ID, String password, String name, String email, int totalCash, int score){
 	this.ID = ID;
@@ -22,7 +23,7 @@ public User(String ID, String password, String name, String email, int totalCash
 	this.email = email;
 	this.totalCash = totalCash;
 	this.score = score;
-	
+	status=UserStatus.DISCONNECTED;
 }
 
 public String toString()
@@ -126,6 +127,16 @@ public void editName(String newName) {
 public void editEmail(String newEmail) {
 	this.email=newEmail;
 	
+}
+
+@Override
+public void login() {
+	this.status=UserStatus.CONNECTED;
+}
+
+@Override
+public void logout() {
+	this.status=UserStatus.DISCONNECTED;
 }
 
 }

@@ -38,4 +38,8 @@ public interface UserInterface {
 	public LinkedList<Game> Search(String playerName,int potSize);
 
 	public boolean joinGame(Game game, Player player);
+	
+    public void login();
+	
+	public void logout();
 }

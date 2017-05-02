@@ -48,17 +48,17 @@ public class GameCenter implements GmaeCenterInterface{
 
 	   for (User usr : users) {
 		     if(usr.getID().equals(ID))
-		    	 LOGGER.warning("Error: this ID already exist in the system");
+		    	 LOGGER.info("Error: this ID already exist in the system");
 		         return false;
 		    }
 	   if(!isValidEmailAddress(email))
 		   {
-		    LOGGER.warning("Error: invalid email address");
+		    LOGGER.info("Error: invalid email address");
 		    return false;
 		   }
 	   if(password.length()<8)
 		   {
-		     LOGGER.warning("Error: the password is too short");
+		     LOGGER.info("Error: the password is too short");
 		     return false;
 		   }
 	   newUser=new User(ID, password, name, email, 0, 0);
@@ -112,7 +112,7 @@ public boolean editUserPassword(String userID, String newPassword) {
 		}
 	if(newPassword.length()<8)
 		{
-		  LOGGER.warning("Error: the password is too short");
+		  LOGGER.info("Error: the password is too short");
 		  return false;
 		}
 	
@@ -130,7 +130,7 @@ public boolean editUserPassword(String userID, String newPassword) {
 public boolean editUserName(String userID, String newName) {
 	if(newName.isEmpty())
 		{
-		  LOGGER.warning("Error: empty name is invalid");
+		  LOGGER.info("Error: empty name is invalid");
 		  return false;
 		}
 	
@@ -148,12 +148,12 @@ public boolean editUserName(String userID, String newName) {
 public boolean editUserEmail(String userID, String newEmail) {
 	if(newEmail.isEmpty())
 		{
-		  LOGGER.warning("Error: empty email is invalid");
+		  LOGGER.info("Error: empty email is invalid");
 		  return false;
 		}
 	if(!isValidEmailAddress(newEmail))
 	{    
-		LOGGER.warning("Error: invalid email address");
+		LOGGER.info("Error: invalid email address");
 		 return false;
 	}
 	
@@ -165,6 +165,34 @@ public boolean editUserEmail(String userID, String newEmail) {
 	     }
 	    }
 	return true;
+}
+
+@Override
+public boolean login(String ID, String password) {
+	for (User usr : users) {
+	     if(usr.getID().equals(ID))
+	     {
+	    	 if(usr.getPassword().equals(password))
+	    	 {
+	    	  usr.login();
+	          return true;
+	    	 }
+	    	 else
+	    	 {
+	    		 LOGGER.info("Error: incorrect password");
+	    		 return false;
+	    	 }
+	     }
+	    }
+	LOGGER.info("Error: unrecognize id");
+	return false;
+}
+
+@Override
+public void logout(String ID) {
+	for (User usr : users) 
+	   if(usr.getID().equals(ID))
+         usr.logout();
 }
    
 }
