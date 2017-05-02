@@ -11,7 +11,7 @@ import Game.Player;
 import user.User;
 
 public class GameCenter implements GmaeCenterInterface{
-   private  ConcurrentLinkedQueue<User> users;
+   private  ConcurrentLinkedQueue<User> users; 
    private ConcurrentLinkedQueue<Game> games;
    private static GmaeCenterInterface singleton = new GameCenter( );
    private final static Logger LOGGER = Logger.getLogger(GameCenter.class.getName());
@@ -23,6 +23,16 @@ public class GameCenter implements GmaeCenterInterface{
    private GameCenter(){
 	   users = new ConcurrentLinkedQueue<User>();
 	   games= new ConcurrentLinkedQueue<Game>();
+   }
+   
+   
+   public User getUser(String ID)
+   {
+	   User user = null;
+	   for (User usr : users) 
+		     if(usr.getID().equals(ID))
+		    	 user=usr;
+	   return user;
    }
    
    /**
@@ -46,11 +56,12 @@ public class GameCenter implements GmaeCenterInterface{
    {
 	   User newUser;
 
-	   for (User usr : users) {
+	   for (User usr : users) 
 		     if(usr.getID().equals(ID))
+		     {
 		    	 LOGGER.info("Error: this ID already exist in the system");
 		         return false;
-		    }
+		     }
 	   if(!isValidEmailAddress(email))
 		   {
 		    LOGGER.info("Error: invalid email address");
@@ -194,5 +205,5 @@ public void logout(String ID) {
 	   if(usr.getID().equals(ID))
          usr.logout();
 }
-   
+
 }

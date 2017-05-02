@@ -9,6 +9,7 @@ import user.User;
 public interface GmaeCenterInterface {
 
 	
+	public User getUser(String ID);
 	/**
 	 * 
 	 *this function get all the details of unregistered user, check them under the game policy, if there is'nt problem with one or more of the details make a new user and add him to the system

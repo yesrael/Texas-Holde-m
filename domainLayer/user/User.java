@@ -33,23 +33,29 @@ public String toString()
 
 public String getID()
 {
-	return ID;
+	return this.ID;
 }
 
 public String getName()
 {
-	return name;
+	return this.name;
 }
 
 public String getEmail()
 {
-	return email;
+	return this.email;
 }
 
 public String getPassword()
 {
-	return password;
+	return this.password;
 }
+
+public UserStatus getStatus()
+{
+	return this.status;
+}
+
 
 
 public void GameUpdated(){
