@@ -1,4 +1,7 @@
 package Game;
+
+import Game.Enum.CardType;
+
 /**
  * 
  * @author ahmad

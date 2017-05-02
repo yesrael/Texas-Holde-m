@@ -1,6 +1,7 @@
 package Game;
 
 import java.util.LinkedList;
+import java.util.Queue;
 
 import user.UserInterface;
 import System.GameLogs;
@@ -14,64 +15,80 @@ import System.GameLogs;
  */
 public class Game implements GameInterface,Runnable{
 
-	private Player[] players;
-	private Player [] WantToJoinPlayers;
+	private LinkedList<Player> players;
+	private Queue<Player> WantToJoinPlayers;
 	private Deck deck;	
 	private int num_of_want_to_join;
-	private int minBid;
+	private GamePreferences preferences;
 	private int playerNumber;
 	private int GameID;
 	private LinkedList<UserInterface> user_waches;
 	GameLogs log_game;
-	public Game(Player Creator,int minBid,int GameID){
-		players = new Player[8];
-		WantToJoinPlayers= new Player[8];
+	
+	public Game(Player Creator, GamePreferences preferences, int GameID){
+		players = new LinkedList<Player>();
+		WantToJoinPlayers = new LinkedList<Player>();
 		this.GameID = GameID;
 		deck = new Deck();
 		deck.shuffle();
-		num_of_want_to_join =0;
-		this.minBid = minBid;
-		players[0] = Creator;
+		num_of_want_to_join = 0;
+		this.preferences = preferences;
+		players.add(Creator);
 		playerNumber = 1;
 		log_game = new  GameLogs(GameID);
 		user_waches = new LinkedList<UserInterface>();
 		
 	}
+	
 	public int getPlayerNumber(){
 		return playerNumber;
 	}
+	
 	public int getMinBid(){
-		return minBid;
+		return preferences.getMinBet();
 	}
+	
 	public int getGameID(){
 		return GameID;
 	}
+	
 	public GameLogs getGameLog(){
 		return log_game;
 	}
-	public Player [] getPlayers(){
-		return players;
+	
+	public Player[] getPlayers(){
+		return players.toArray(new Player[0]);
 	}
-	public Player [] getWantToJoinPlayers(){
-		return WantToJoinPlayers;
+	
+	public Player[] getWantToJoinPlayers(){
+		return WantToJoinPlayers.toArray(new Player[0]);
 	}
+	
 	public void AddUserToWatch(UserInterface p){
 		user_waches.add(p);
 	}
+	
 	/**
 	 * This method Used by GameCenter to add new player to the game
 	 * @param player this player will be holded by the relevant user 
 	 * @return true if this player can join the Game, else (there's more than 8 players, or his cash not enough) return false
 	 */
 	public boolean joinGame(Player player){
+		if(player.getUser().geTotalCash() < preferences.getMinBet())
+			return false;
 		
-		if(playerNumber+num_of_want_to_join<8){
-			if(player.getUser().geTotalCash()>=minBid){
-				WantToJoinPlayers[num_of_want_to_join]=player;
-				return true;
+		if(players.size() < preferences.getMaxPlayersNum() || WantToJoinPlayers.size() < preferences.getMaxPlayersNum()) {
+			synchronized (this) {
+				if(players.size() < preferences.getMaxPlayersNum())
+					players.add(player);
+				else if(WantToJoinPlayers.size() < preferences.getMaxPlayersNum())
+					WantToJoinPlayers.add(player);
+				else return false;
 			}
 		}
-		return false;
+		else //The game is full and there are enough players waiting to join.
+			return false;
+		return true;
 	}
 	
 	public boolean fold(Player player) {
@@ -90,14 +107,9 @@ public class Game implements GameInterface,Runnable{
 	}
 	
 	public boolean leaveGame(Player player) {
-		for(Player p : players){
-			if(p.equals(player)){
-				p = null;
-				playerNumber--;
-				return true;
-			}
+		synchronized (this) {
+			return players.removeFirstOccurrence(player);
 		}
-		return false;
 	}
 	
 	
@@ -105,8 +117,4 @@ public class Game implements GameInterface,Runnable{
 		// TODO Auto-generated method stub
 		
 	}
-	
-	
-
-	
 }

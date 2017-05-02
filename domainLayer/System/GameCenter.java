@@ -2,14 +2,15 @@ package System;
 
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sun.istack.internal.logging.Logger;
-
 import Game.Game;
+import Game.GamePreferences;
 import Game.Player;
+import Game.Enum.GameType;
 import user.User;
 import user.UserInterface;
 
@@ -20,6 +21,7 @@ public class GameCenter implements GmaeCenterInterface{
    private static GmaeCenterInterface singleton = new GameCenter( );
    private LinkedList<GameLogs> game_logs;
    private final static Logger LOGGER = Logger.getLogger(GameCenter.class.getName());
+   private AtomicInteger gameIdGen;
    
    public static GmaeCenterInterface getInstance( ) {
 	      return singleton;
@@ -29,6 +31,7 @@ public class GameCenter implements GmaeCenterInterface{
 	   users = new ConcurrentLinkedQueue<User>();
 	   games= new ConcurrentLinkedQueue<Game>();
 	   game_logs = new  LinkedList<GameLogs>();
+	   gameIdGen = new AtomicInteger(1);
    }
    
    /**
@@ -77,6 +80,7 @@ public class GameCenter implements GmaeCenterInterface{
 	   users.add(user);
 	   
    }
+   
    public void saveFavoriteGame(int GameID){
 	   
 	   for(Game i_game : games){
@@ -85,42 +89,56 @@ public class GameCenter implements GmaeCenterInterface{
 		   
 	   }
    }
-public void replaySavedTurn(int GameID, UserInterface user){
-	   
-	   for(GameLogs i_game_logs : game_logs){
-		   if(i_game_logs.getGameID()==GameID){
-			   user.getLog(i_game_logs.getLog());
-		   }
-			   			   
+   
+	public void replaySavedTurn(int GameID, UserInterface user){
 		   
-	   }
-   }
-public void addUserToSpectatingGame (int GameID, UserInterface user){
-	   
-	   for(Game i_game : games){
-		   if(i_game.getGameID()==GameID){
-			  i_game.AddUserToWatch(user);
+		   for(GameLogs i_game_logs : game_logs){
+			   if(i_game_logs.getGameID()==GameID){
+				   user.getLog(i_game_logs.getLog());
+			   }
+				   			   
+			   
 		   }
-			   			   
-		   
 	   }
-}
+	
+	public void addUserToSpectatingGame (int GameID, UserInterface user){
+		   
+		   for(Game i_game : games){
+			   if(i_game.getGameID()==GameID){
+				  i_game.AddUserToWatch(user);
+			   }
+				   			   
+			   
+		   }
+	}
    
    
    /**
-    * in this function please see the Create game requirment in the Assignment 1 and add the relevant params according to the game preferences, 
+    * in this function please see the Create game requirement in the Assignment 1 and add the relevant params according to the game preferences, 
     * @param user
     * @return true if the user can init game with the giver preferences, 
     */
-   public boolean createGame(Player player){
+   public boolean createGame(Player player, GameType type, int buyIn, int chipPolicy, int minBet, 
+		   int minPlayers, int maxPlayers, boolean spectatable){
 	   
+	   GamePreferences preferences;
+	   try {
+		   preferences = new GamePreferences(type, buyIn, chipPolicy, minBet, minPlayers, maxPlayers, spectatable);
+	   }
+	   catch(Exception e) {
+		   LOGGER.info("Error: game pregerences don't match requirements");
+		   return false;
+	   }
 	   
+	   Game newGame = new Game(player, preferences, gameIdGen.getAndIncrement());
+	   games.add(newGame);
+	   newGame.run();
 	   
 	   return false;
    }
    
    /**
-    * see Search/filter activegames in assignment 1 and the relevant usecase
+    * see Search/filter active games in assignment 1 and the relevant use case
     * @param playerName
     * @param potSize
     * @return
@@ -171,7 +189,6 @@ public void addUserToSpectatingGame (int GameID, UserInterface user){
    }
    
 
-@Override
 public boolean editUserPassword(String userID, String newPassword) {
 	if(newPassword.isEmpty())
 		{
@@ -194,7 +211,6 @@ public boolean editUserPassword(String userID, String newPassword) {
 	return true;
 }
 
-@Override
 public boolean editUserName(String userID, String newName) {
 	if(newName.isEmpty())
 		{
@@ -212,7 +228,6 @@ public boolean editUserName(String userID, String newName) {
 	return true;
 }
 
-@Override
 public boolean editUserEmail(String userID, String newEmail) {
 	if(newEmail.isEmpty())
 		{

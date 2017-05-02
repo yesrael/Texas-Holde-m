@@ -2,6 +2,8 @@ package Game;
 
 import java.util.Random;
 
+import Game.Enum.CardType;
+
 public class Deck implements DeckInterface{
    private Card[] cards; 
    private int currentCardPlace;

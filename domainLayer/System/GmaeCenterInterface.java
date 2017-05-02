@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import Game.Game;
 import Game.Player;
+import Game.Enum.GameType;
 import user.User;
 
 public interface GmaeCenterInterface {
@@ -22,7 +23,8 @@ public interface GmaeCenterInterface {
 	    * @param user
 	    * @return true if the user can init game with the giver preferences, 
 	    */
-	   public boolean createGame(Player player);
+	   public boolean createGame(Player player, GameType type, int buyIn, int chipPolicy, int minBet, 
+			   int minPlayers, int maxPlayers, boolean spectatable);
 	   
 	   /**
 	    * see Search/filter activegames in assignment 1 and the relevant usecase
