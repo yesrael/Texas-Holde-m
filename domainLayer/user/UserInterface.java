@@ -20,12 +20,15 @@ public interface UserInterface {
 
 	public boolean fold();
 
-
+	public String getName();
+	public int geTotalCash();
 	public boolean check();
 
 	public boolean bet(int money);
 
 	public boolean leaveGame();
+	public void getLog(LinkedList<String> i_game_logs);
+	public void getLog(String i_game_logs);
 
 
 	public boolean giveMoney(int money);

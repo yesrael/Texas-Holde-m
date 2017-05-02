@@ -2,8 +2,12 @@ package user;
 
 import java.util.LinkedList;
 
+import com.sun.istack.internal.logging.Logger;
+
 import Game.Game;
 import Game.Player;
+import System.GameCenter;
+import System.GameLogs;
 
 public class User implements UserInterface {
 	
@@ -15,6 +19,7 @@ private LinkedList<Player> inGamePlayers;
 private int totalCash;
 private int score;
 private UserStatus status;
+Logger my_log;
 
 public User(String ID, String password, String name, String email, int totalCash, int score){
 	this.ID = ID;
@@ -24,6 +29,29 @@ public User(String ID, String password, String name, String email, int totalCash
 	this.totalCash = totalCash;
 	this.score = score;
 	status=UserStatus.DISCONNECTED;
+	my_log = Logger.getLogger(User.class);
+	
+}
+
+public String getName(){
+	return name;
+}
+  
+public int geTotalCash(){
+	return totalCash;
+}
+
+public void getLog(LinkedList<String> i_game_logs){
+	
+	   for(String s :i_game_logs){
+		   my_log.info(s);
+	   }
+}
+
+public void getLog(String  i_game_logs){
+	 
+	  
+	 my_log.info(i_game_logs);
 }
 
 public String toString()
@@ -34,11 +62,6 @@ public String toString()
 public String getID()
 {
 	return this.ID;
-}
-
-public String getName()
-{
-	return this.name;
 }
 
 public String getEmail()
@@ -55,15 +78,10 @@ public UserStatus getStatus()
 {
 	return this.status;
 }
-
-
-
+  
 public void GameUpdated(){
 	 
-	 
 }
-
-
 
 public boolean takeAction(){
 	 

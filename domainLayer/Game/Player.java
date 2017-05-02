@@ -14,10 +14,12 @@ public class Player implements PlayerInterface{
 		 this.cash = cash;
 		 this.User = User;
 		 this.Game = Game;
-		 
+		 hand = new Card[2];
 		 
 	 }
-	 
+	 public UserInterface getUser(){
+		 return User;
+	 }
 	 /**
 	  * This method will be used by the Game to give the player cards
 	  * */ 
@@ -33,6 +35,7 @@ public class Player implements PlayerInterface{
 		 
 		 
 	 }
+	 
 	 
 	 
 	 /**
@@ -92,5 +95,12 @@ public class Player implements PlayerInterface{
 	public int getCash() {
 	return cash;
 	}
+
+	@Override
+	public Card[] getCards() {
+		return hand;
+	}
+
+
 	 
 }
