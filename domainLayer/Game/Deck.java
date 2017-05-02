@@ -2,6 +2,8 @@ package Game;
 
 import java.util.Random;
 
+import Game.Enum.CardType;
+
 public class Deck implements DeckInterface{
    private Card[] cards; 
    private int currentCardPlace;
@@ -20,8 +22,6 @@ public class Deck implements DeckInterface{
 	   
    }
    
-   
-	@Override
 	public void shuffle() {
 	    int newI;
 	    Card temp;
@@ -40,7 +40,6 @@ public class Deck implements DeckInterface{
 	}
 
 
-	@Override
 	public Card getCard() {
 		currentCardPlace++;
 		if(currentCardPlace <=52)
