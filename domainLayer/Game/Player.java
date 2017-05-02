@@ -17,7 +17,9 @@ public class Player implements PlayerInterface{
 		 hand = new Card[2];
 		 
 	 }
-	 
+	 public UserInterface getUser(){
+		 return User;
+	 }
 	 /**
 	  * This method will be used by the Game to give the player cards
 	  * */ 
