@@ -6,8 +6,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sun.istack.internal.logging.Logger;
-
 import Game.Game;
 import Game.Player;
 import user.User;
