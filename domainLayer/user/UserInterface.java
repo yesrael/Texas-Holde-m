@@ -26,7 +26,7 @@ public interface UserInterface {
 
 	public boolean bet(int money);
 
-	public boolean leaveGame();
+	public boolean leaveGame(Player player);
 	public void getLog(LinkedList<String> i_game_logs);
 	public void getLog(String i_game_logs);
 
@@ -40,7 +40,7 @@ public interface UserInterface {
 
 	public LinkedList<Game> Search(String playerName,int potSize);
 
-	public boolean joinGame(Game game, Player player);
+	public boolean joinGame(Player player);
 	
     public void login();
 	

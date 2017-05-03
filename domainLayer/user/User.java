@@ -93,7 +93,7 @@ public class User implements UserInterface {
 		 return false;
 	}
 	
-	public boolean leaveGame(){
+	public boolean leaveGame(Player player){
 		 
 		 return false;
 	}
@@ -120,7 +120,7 @@ public class User implements UserInterface {
 		   return null;
 	}
 	
-	public boolean joinGame(Game game, Player player){
+	public boolean joinGame(Player player){
 		   
 		   return false;
 	}

@@ -90,7 +90,7 @@ public class Game implements GameInterface,Runnable{
 			synchronized (this) {
 				if(players.size() < preferences.getMaxPlayersNum()) {
 					players.add(player);
-					player.getUser().joinGame(this, player);
+					player.getUser().joinGame(player);
 					playersNumber++;
 				}
 				else if(WantToJoinPlayers.size() < preferences.getMaxPlayersNum()) {
@@ -127,11 +127,12 @@ public class Game implements GameInterface,Runnable{
 		synchronized (this) {
 			boolean found = players.removeFirstOccurrence(player);
 			if(found) {
+				player.getUser().leaveGame(player);
 				playersNumber--;
 				if(WantToJoinPlayers.size() > 0) {
 					Player p = WantToJoinPlayers.remove();
 					players.add(p);
-					p.getUser().joinGame(this, p);
+					p.getUser().joinGame(p);
 					playersNumber++;
 					num_of_want_to_join--;
 				}
@@ -163,7 +164,7 @@ public class Game implements GameInterface,Runnable{
                 table[i] = card1;
 			
 		}
-		cardsOnTable+=number;
+		cardsOnTable += number;
 		return true;
 	}
 	
@@ -179,22 +180,22 @@ public class Game implements GameInterface,Runnable{
 
 			while (playersNumber > 1){
 				
+				players.get(blindBit).takeMoney(minBid / 2);
+				players.get(((blindBit + 1) % playersNumber)).takeMoney(minBid);
+				blindBit = (blindBit+1) % playersNumber;
 				dealCardsForPlayers();
-				players.get(blindBit).takeMoney(minBid/2);
-				players.get(((blindBit + 1)%playersNumber)).takeMoney(minBid);
-				blindBit = (blindBit+1)%playersNumber;
 				oneTurn();
 				folded.clear();
-				Player[] winners= checkWinner();
-				for(int i=0;i<winners.length;i++){
+				Player[] winners = checkWinner();
+				for(int i = 0; i < winners.length; i++){
 					
-					winners[i].giveMoney(cashOnTheTable/winners.length);
+					winners[i].giveMoney(cashOnTheTable / winners.length);
 				}
 				deck = new Deck();
 				deck.shuffle();
-				cashOnTheTable=0;
+				cashOnTheTable = 0;
 				table = new Card[5];
-				cardsOnTable=0;
+				cardsOnTable = 0;
 				
 				
 			}
@@ -202,22 +203,24 @@ public class Game implements GameInterface,Runnable{
 	}
 	
 	private void oneTurn() {
-		int RoundNumber=0;
+		int RoundNumber = 0;
 		int currentPlayer = 1;
-		int played=1;
+		int played = 1;
 
-		while(RoundNumber < 4 && playersNumber - folded.size()>1){
+		while(RoundNumber < 4 && playersNumber - folded.size() > 1) {
 			CurrentBet = preferences.getMinBet();
-			while(played < playersNumber - folded.size()){
-				Player current = players.get((blindBit+currentPlayer)%playersNumber);
+			while(played < playersNumber - folded.size()) {
+				Player current = players.get((blindBit + currentPlayer) % playersNumber);
 				int prevCashOnTheTable = cashOnTheTable;
 				if(!folded.contains(current)){
 					if(!current.takeAction()){
 						folded.add(current);
 						
 					}
-					else if (cashOnTheTable > prevCashOnTheTable + CurrentBet) 
-					{played = 1; CurrentBet=cashOnTheTable - prevCashOnTheTable;}
+					else if (cashOnTheTable > prevCashOnTheTable + CurrentBet) {
+						played = 1; 
+						CurrentBet=cashOnTheTable - prevCashOnTheTable;
+					}
 					else played++;
 				}
 				currentPlayer++;
@@ -225,7 +228,7 @@ public class Game implements GameInterface,Runnable{
 			
 			played = 0;
 			if(RoundNumber == 0) dealCardsForTable(3);
-			else if(RoundNumber!=3) dealCardsForTable(1);
+			else if(RoundNumber != 3) dealCardsForTable(1);
 		}
 	}
 }
