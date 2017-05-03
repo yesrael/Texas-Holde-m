@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import Game.Game;
 import Game.Player;
+import Game.Enum.GameType;
 
 public interface UserInterface {
 
@@ -35,7 +36,8 @@ public interface UserInterface {
 
 
 
-	public boolean createGame(Player player);
+	public boolean createGame(Player player, GameType type, int buyIn, int chipPolicy, int minBet, 
+			   int minPlayers, int maxPlayers, boolean spectatable);
 
 
 	public LinkedList<Game> Search(String playerName,int potSize);
