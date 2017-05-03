@@ -17,6 +17,7 @@ public class Game implements GameInterface,Runnable{
 
 	private LinkedList<Player> players;
 	private Queue<Player> WantToJoinPlayers;
+	private Player CurrentPlayer;
 	private Deck deck;	
 	private int num_of_want_to_join;
 	private GamePreferences preferences;
@@ -76,6 +77,7 @@ public class Game implements GameInterface,Runnable{
 	}
 	
 	public void AddUserToWatch(UserInterface p){
+		log_game.addLog(p.getName() + " Watching the Game");
 		user_waches.add(p);
 	}
 	
@@ -85,14 +87,16 @@ public class Game implements GameInterface,Runnable{
 	 * @return true if this player can join the Game, else (there's more than MaxPlayers players, or his cash not enough) return false
 	 */
 	public boolean joinGame(Player player){
-		if(player.getUser().geTotalCash() < preferences.getMinBet())
+		if(player.getUser().geTotalCash() < preferences.getMinBet()){
+			log_game.addLog(player.getUser().getName() + "failed to joing this Game because of his total cash");
 			return false;
-		
+		}
 		if(players.size()+WantToJoinPlayers.size() < preferences.getMaxPlayersNum()) {
 			synchronized (this) {
 				if(players.size() +WantToJoinPlayers.size() < preferences.getMaxPlayersNum()) {
 					WantToJoinPlayers.add(player);
 					num_of_want_to_join++;
+					log_game.addLog(player.getUser().getName() + "Joined The Game");
 				}
 				else return false;
 			}
@@ -103,23 +107,35 @@ public class Game implements GameInterface,Runnable{
 	}
 	
 	public boolean fold(Player player) {
+		if(player == CurrentPlayer){
 		WantToJoinPlayers.add(player);
 		num_of_want_to_join++;
 		players.remove(player);
 		playersNumber--;
+		log_game.addLog(player.getUser().getName() + "Fold for This round");
 		
-		return true;
+		return true;}
+		log_game.addLog(player.getUser().getName() + "Failed to fold");
+		return false;
 	}
 	
 	public boolean check(Player player) {
+		if(player == CurrentPlayer){
+		log_game.addLog(player.getUser().getName() + "Checked for This Round");
 		
-		return true;
+		return true;}
+		else {
+			log_game.addLog(player.getUser().getName() + "Failed To Check");
+			return false;
+		}
 	}
 	
 	public boolean bet(Player player, int money) {
-		if(player.getCash() >= money && money>=CurrentBet)
+		if(player.getCash() >= money && money>=CurrentBet && player == CurrentPlayer)
 		 {cashOnTheTable += money;
+		 log_game.addLog(player.getUser().getName() + "Betted for This Round: "+ money);
 		return true;}
+		log_game.addLog(player.getUser().getName() + "Failed To Bet");
 		return false;
 	}
 	
@@ -132,12 +148,13 @@ public class Game implements GameInterface,Runnable{
 				if(players.indexOf(player) <= blindBit) 
 					if(blindBit == 0) blindBit = players.size() -1;
 					else blindBit --;
-				
+				log_game.addLog(player.getUser().getName() + "Left The Game");
 				playersNumber--;
 				players.removeFirstOccurrence(player);
 			}
 			else if (WantToJoinPlayers.remove(player)) 
 			{num_of_want_to_join--;
+			log_game.addLog(player.getUser().getName() + "Left The Game");
 			return true;
 				
 				
@@ -152,6 +169,7 @@ public class Game implements GameInterface,Runnable{
 			Card card2 = deck.getCard();
 			if(card1 == null || card2 == null) return false;
 			players.get(i).giveCards(card1, card2);
+			log_game.addLog(players.get(i).getUser().getName() + " got this cards: "+ card1.getNumber() + "of Kind: " + card1.getType()+" And "+ card2.getNumber() + " of Kind: " + card2.getType());
 			
 		}
 		if (players.size() <2) return false; 
@@ -167,6 +185,9 @@ public class Game implements GameInterface,Runnable{
 
 			if(card1 == null ) return false;
                 table[i] = card1;
+                
+    			log_game.addLog("New Card to The Table"+ card1.getNumber() + "of Kind: " + card1.getType());
+
 			
 		}
 		cardsOnTable += number;
@@ -209,6 +230,8 @@ public class Game implements GameInterface,Runnable{
 			if(result!= null && result.length !=0)
 				return result;
 			result = HighCard();
+			
+			log_game.addLog("The Winners In This Round: "+ result.toString());
 			return result;
 			
 		} 
@@ -568,7 +591,10 @@ public class Game implements GameInterface,Runnable{
 		for(int i = 0; i < winners.length; i++){
 			
 			winners[i].giveMoney(cashOnTheTable / winners.length);
-		}}
+		}
+		log_game.addLog("Every Winner Got: "+(cashOnTheTable/winners.length));
+		}
+		
 	}
 
 	private void initTableForNewTurn() {
@@ -581,6 +607,7 @@ public class Game implements GameInterface,Runnable{
 		players.get(((blindBit + 1) % playersNumber)).takeMoney(preferences.getMinBet());
 		blindBit = (blindBit+1) % playersNumber;
 		dealCardsForPlayers();
+		log_game.addLog("Cards Dealed For the Players, And BlinBet Was Betted And The Game Starting");
 	}
 
 	private void ExchangeWaitingPlayers() {
@@ -589,18 +616,21 @@ public class Game implements GameInterface,Runnable{
 			playersNumber++;
 			
 		}
+		log_game.addLog(WantToJoinPlayers.size()+" Players Waiting for playing was Inserted To The list of The Active Players");
 	}
 	
 	private void oneTurn() {
 		int RoundNumber = 0;
 		int currentPlayer = 1;
 		int played = 1;
-
+           
 		while(RoundNumber < 4 && playersNumber > 1) {
+			log_game.addLog("Round number: "+ RoundNumber + " Started");
 			CurrentBet = preferences.getMinBet();
 			while(played < playersNumber - folded.size()) {
 				Player current = players.get((blindBit + currentPlayer) % playersNumber);
 				int prevCashOnTheTable = cashOnTheTable;
+				CurrentPlayer = current;
 					if(!current.takeAction()){
 						current.leaveGame();
 						
@@ -614,15 +644,16 @@ public class Game implements GameInterface,Runnable{
 					currentPlayer++;
 					GameUpated();
 				}
-	
+			CurrentPlayer = null;
 				played = 0;
 				if(RoundNumber == 0) dealCardsForTable(3);
 				else if(RoundNumber != 3) dealCardsForTable(1);
 				GameUpated();
+				log_game.addLog("Round number: "+ RoundNumber + " Ended");
 			}
 		
 		GameUpated();
-			
+		log_game.addLog("One Turn Done");
 
 		}
 	}
