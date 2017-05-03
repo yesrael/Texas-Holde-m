@@ -6,6 +6,7 @@ import com.sun.istack.internal.logging.Logger;
 
 import Game.Game;
 import Game.Player;
+import Game.Enum.GameType;
 import System.GameCenter;
 import System.GameLogs;
 
@@ -106,11 +107,12 @@ public class User implements UserInterface {
 	
 	
 	
-	public boolean createGame(Player player){
+	public boolean createGame(Player player, GameType type, int buyIn, int chipPolicy, int minBet, 
+			   int minPlayers, int maxPlayers, boolean spectatable){
 		   
+		  return GameCenter.getInstance().createGame(player, type, buyIn, chipPolicy, minBet, minPlayers, maxPlayers, spectatable);
 		   
-		   
-		   return false;
+		 
 	}
 	
 	
