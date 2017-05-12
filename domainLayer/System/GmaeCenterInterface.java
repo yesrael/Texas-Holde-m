@@ -39,7 +39,7 @@ public interface GmaeCenterInterface {
 	    * @return true if the user can init game with the giver preferences, 
 	    */
 	   public boolean createGame(Player player, GameType type, int buyIn, int chipPolicy, int minBet, 
-			   int minPlayers, int maxPlayers, boolean spectatable);
+			   int minPlayers, int maxPlayers, boolean spectatable,boolean leaguable);
 	   
 	   /**
 	    * see Search/filter activegames in assignment 1 and the relevant usecase

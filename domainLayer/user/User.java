@@ -20,9 +20,10 @@ public class User implements UserInterface {
 	private int totalCash;
 	private int score;
 	private UserStatus status;
+	private int league;
 	Logger my_log;
 
-	public User(String ID, String password, String name, String email, int totalCash, int score){
+	public User(String ID, String password, String name, String email, int totalCash, int score,int league){
 		this.ID = ID;
 		this.password=password;
 		this.name = name;
@@ -31,6 +32,7 @@ public class User implements UserInterface {
 		this.score = score;
 		status = UserStatus.DISCONNECTED;
 		my_log = Logger.getLogger(User.class);
+		this.setLeague(league);
 	}
 	
 	public String getName(){
@@ -107,13 +109,7 @@ public class User implements UserInterface {
 	
 	
 	
-	public boolean createGame(Player player, GameType type, int buyIn, int chipPolicy, int minBet, 
-			   int minPlayers, int maxPlayers, boolean spectatable){
-		   
-		  return GameCenter.getInstance().createGame(player, type, buyIn, chipPolicy, minBet, minPlayers, maxPlayers, spectatable);
-		   
-		 
-	}
+
 	
 	
 	public LinkedList<Game> Search(String playerName,int potSize){
@@ -162,6 +158,14 @@ public class User implements UserInterface {
 	
 	public void logout() {
 		this.status = UserStatus.DISCONNECTED;
+	}
+
+	public int getLeague() {
+		return league;
+	}
+
+	public void setLeague(int league) {
+		this.league = league;
 	}
 
 }
