@@ -34,10 +34,7 @@ public interface UserInterface {
 
 	public boolean giveMoney(int money);
 
-
-
-	public boolean createGame(Player player, GameType type, int buyIn, int chipPolicy, int minBet, 
-			   int minPlayers, int maxPlayers, boolean spectatable);
+ 
 
 
 	public LinkedList<Game> Search(String playerName,int potSize);
@@ -47,4 +44,7 @@ public interface UserInterface {
     public void login();
 	
 	public void logout();
+	public int getLeague() ;
+
+	public void setLeague(int league);
 }

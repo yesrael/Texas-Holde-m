@@ -81,7 +81,7 @@ public class GameCenter implements GmaeCenterInterface{
 		     LOGGER.info("Error: the password is too short");
 		     return false;
 		   }
-	   newUser=new User(ID, password, name, email, 0, 0);
+	   newUser=new User(ID, password, name, email, 0, 0,-1);
 	   addUser(newUser);
 	   return true;
    }
@@ -130,11 +130,11 @@ public class GameCenter implements GmaeCenterInterface{
     * @return true if the user can init game with the giver preferences, 
     */
    public boolean createGame(Player player, GameType type, int buyIn, int chipPolicy, int minBet, 
-		   int minPlayers, int maxPlayers, boolean spectatable){
+		   int minPlayers, int maxPlayers, boolean spectatable,boolean leaguable){
 	   
 	   GamePreferences preferences;
 	   try {
-		   preferences = new GamePreferences(type, buyIn, chipPolicy, minBet, minPlayers, maxPlayers, spectatable);
+		   preferences = new GamePreferences(type, buyIn, chipPolicy, minBet, minPlayers, maxPlayers, spectatable,leaguable,player.getUser().getLeague());
 	   }
 	   catch(Exception e) {
 		   LOGGER.info("Error: game pregerences don't match requirements");
