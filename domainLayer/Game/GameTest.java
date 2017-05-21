@@ -7,6 +7,7 @@ import org.junit.Test;
 import Game.Enum.GameType;
 
 public class GameTest {
+/*
     Game g ;
     Player p1 = new Player(20, null, g);
     Player p2 = new Player(20, null, g);
@@ -41,5 +42,5 @@ public class GameTest {
 	    assertTrue((p2.getCards()[1].getNumber() != p1.getCards()[1].getNumber()) || (p2.getCards()[1].getType() != p1.getCards()[1].getType()));
 	    
 	}
-
+*/
 }
