@@ -20,11 +20,11 @@ public class GameCenter implements GameCenterInterface{
    private  ConcurrentLinkedQueue<User> users; 
    private ConcurrentLinkedQueue<Game> games;
 
-   private static GameCenterInterface singleton = new GameCenter( );
+
    private LinkedList<GameLogs> game_logs;
    private final static Logger LOGGER = Logger.getLogger(GameCenter.class.getName());
    private AtomicInteger gameIdGen;
-   
+   private static GameCenterInterface singleton = new GameCenter( );
    public static GameCenterInterface getInstance( ) {
 	      return singleton;
 	   }
@@ -103,19 +103,18 @@ public class GameCenter implements GameCenterInterface{
    /**
     * in this function please see the Create game requirement in the Assignment 1 and add the relevant params according to the game preferences, 
     * @param user
-    * @return true if the user can init game with the giver preferences, 
+    * @return GAME ID if the user can init game with the giver preferences, "" else 
     */
-   public boolean createGame(String UserID, GameType type,int Limit, int buyIn, int chipPolicy, int minBet, 
-		   int minPlayers, int maxPlayers, boolean spectatable,boolean leaguable){
+   public String createGame(String UserID,GamePreferences preference){
 	   
 	   GamePreferences preferences;
 	   UserInterface creator = getUser(UserID);
 	   try {
-		   preferences = new GamePreferences(type,Limit, buyIn, chipPolicy, minBet, minPlayers, maxPlayers, spectatable,leaguable,creator.getLeague());
+		   preferences = preference;
 	   }
 	   catch(Exception e) {
 		   LOGGER.info("Error: game pregerences don't match requirements");
-		   return false;
+		   return "";
 	   }
 	   
 	   Game newGame = new Game(preferences, gameIdGen.getAndIncrement()+"");
@@ -123,12 +122,12 @@ public class GameCenter implements GameCenterInterface{
 	   if(joinGame(newGame.getGameID(),UserID)){
 		   Thread th = new Thread(newGame);
 		   th.start();
-		   return true;
+		   return newGame.getGameID();
 	   }
 	   else{
 		   games.remove(newGame);
 	   }
-	   return false;
+	   return "";
    }
    
    /**

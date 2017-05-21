@@ -27,9 +27,9 @@ public class GamePreferences {
        CheckEquality = new LinkedList<checkingEquality>();
        checking = true;
        checkingEquality = true;
-       
+	   this.buyInPolicy = buyInPolicy;
        if(buyInPolicy > 0){
-    	   this.buyInPolicy = buyInPolicy;
+
     	   CheckPlayer.add((checker)player->{
     		   checking = checking && player.getUser().getTotalCash() > this.buyInPolicy;
     	   });
@@ -39,9 +39,10 @@ public class GamePreferences {
     	   });
     	   
        }
+	   this.chipPolicy = chipPolicy;
        if(chipPolicy > 0 ){
     	   
-    	   this.chipPolicy = chipPolicy;
+
     	   CheckPlayer.add((checker)player->{
     		   checking = checking && player.getUser().getTotalCash() > this.chipPolicy + this.buyInPolicy;
     	   });
@@ -51,8 +52,8 @@ public class GamePreferences {
     	   });
     	   
        }
-       if(minBet > 0){
-    	   this.minBet = minBet;   
+       this.minBet = minBet; 
+       if(minBet > 0){ 
     	   CheckPlayer.add((checker)player->{
     		   checking = checking && player.getUser().getTotalCash() > this.minBet + this.chipPolicy + this.buyInPolicy;
     	   });
@@ -95,6 +96,8 @@ public class GamePreferences {
 	    	   });
 			
 		}
+		this.league = 0;
+		
 	}
 
 	public GameType getGameTypePolicy() {
