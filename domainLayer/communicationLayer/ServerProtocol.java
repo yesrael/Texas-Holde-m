@@ -13,7 +13,7 @@ public interface ServerProtocol<T> {
 	* @param callback an instance of ProtocolCallback unique to the
 	connection from which msg originated .
 	*/
-	void processMessage ( T msg , ProtocolCallback <T > callback ) ;
+	public void processMessage(String msg, ProtocolCallback<String> callback,ConnectionHandler handler) ;
 	/**
 	* Determine whether the given message is the termination message .
 	*

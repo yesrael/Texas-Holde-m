@@ -10,7 +10,6 @@ import java.net.Socket;
 
 
 public class ConnectionHandler implements Runnable{
-private boolean playing;
 
 private BufferedReader in;
 private PrintWriter out;
@@ -33,9 +32,7 @@ public ConnectionHandler(Socket acceptedSocket, ServerProtocol<String> p) {
 
 
 
-public boolean isPlaying() {
-	return playing;
-}
+
 
 
 
@@ -85,10 +82,11 @@ public void process() throws IOException {
 		System.out.println("Received \"" + msg + "\" from client");
 		
 	 protocol.processMessage(msg,resp->{
+		 synchronized (this) {
 		 if(resp!=null) out.println(resp);
 		 if(protocol.isEnd(resp)) isEnd[0] = false;
-		 
-	 });
+		 } 
+	 },this);
 		
 		
 	}
@@ -97,6 +95,11 @@ public void process() throws IOException {
 	
 
 	}
+
+	
+public void send(String msg){
+	synchronized (this) {
+	    if(msg!=null) out.println(msg);
+}}
+
 }
-	
-

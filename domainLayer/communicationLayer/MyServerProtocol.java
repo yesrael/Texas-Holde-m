@@ -18,7 +18,7 @@ public class MyServerProtocol implements ServerProtocol<String>{
 	}
 	
 	
-	public void processMessage(String msg, ProtocolCallback<String> callback) {
+	public void processMessage(String msg, ProtocolCallback<String> callback,ConnectionHandler handler) {
 		String[] parts=msg.split(" ");  //split the word(here we didn't care about the message with more than one space)
 		try {
 		if(parts[0].equals("REG")){
@@ -27,7 +27,7 @@ public class MyServerProtocol implements ServerProtocol<String>{
 			
 		}
 		else if(parts[0].equals("LOGIN")){
-			String response = serviceLayerr.login(msg);
+			String response = serviceLayerr.login(msg,handler);
 			if(response.contains("DONE")){
 				this.name = parts[1];
 				
@@ -36,6 +36,7 @@ public class MyServerProtocol implements ServerProtocol<String>{
 		}
 		else if(parts[0].equals("LOGOUT")){
 			if(this.name!=null&&parts[1].equals(name)){
+				this.name =null;
 				callback.sendMessage(serviceLayerr.logout(msg));}
 			else {
 				callback.sendMessage("LOGOUT FAILED USER NOT LOGGED IN");

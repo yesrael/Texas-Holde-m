@@ -7,9 +7,7 @@ import com.sun.istack.internal.logging.Logger;
 import Game.Game;
 import Game.GameInterface;
 import Game.Player;
-import Game.Enum.GameType;
-import System.GameCenter;
-import System.GameLogs;
+import communicationLayer.ConnectionHandler;
 
 public class User implements UserInterface {
 	
@@ -17,12 +15,13 @@ public class User implements UserInterface {
 	private String name;
 	private String email;
 	private String password;
-	private LinkedList<Player> inGamePlayers;
 	private int totalCash;
 	private int score;
 	private UserStatus status;
 	private int league;
 	Logger my_log;
+	private boolean isWaitingForAction;
+	private ConnectionHandler handler;
 
 	public User(String ID, String password, String name, String email, int totalCash, int score, int league){
 		this.ID = ID;
@@ -31,6 +30,7 @@ public class User implements UserInterface {
 		this.email = email;
 		this.totalCash = totalCash;
 		this.score = score;
+		isWaitingForAction=false;
 		status = UserStatus.DISCONNECTED;
 		my_log = Logger.getLogger(User.class);
 		this.league = league;
@@ -126,18 +126,56 @@ public class User implements UserInterface {
 		this.league = league;
 	}
 
-
+	/**
+	 * this function sends GAMEUPDATED message to the client "GAMEUPDATE *GAME FULL DETAILS*"
+	 */
 	public void GameUpdated(GameInterface game) {
-		// TODO Auto-generated method stub
+		if(handler !=null&&this.status == UserStatus.CONNECTED)
+		this.handler.send("GAMEUPDATE "+GameToString((Game)game));
 		
 	}
 
-	@Override
-	public boolean takeAction() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	private String GameToString(Game game){
 
+		String result="GameID="+game.getGameID();
+		result= result+"&players=";
+		Player[] players= game.getPlayers();
+		for(int i=0;i<players.length;i++){
+			result = result+players[i].getUser().getID()+","+ players[i].getUser().getName()+",";
+		}
+		result = result + "&activePlayers=";
+		 players= game.getActivePlayers();
+		for(int i=0;i<players.length;i++){
+			result = result+players[i].getUser().getID()+","+ players[i].getUser().getName()+",";
+		}
+		result = result + "&blindBit="+game.getBlindBit();
+		result = result + "&CurrentPlayer="+game.getCurrentPlayer().getUser().getID();
+		result = result + "&table=";
+		
+		for(int i=0;i<game.getCardsOnTable();i++){
+			
+			result = result+game.getTable()[i].getNumber()+","+ game.getTable()[i].getType()+",";
+
+		}
+		result = result + "&MaxPlayers="+game.getpreferences().getMaxPlayersNum();
+		result = result + "&cashOnTheTable="+game.getCashOnTheTable();
+		return result;
+	}
+	/**
+	 * this function sends TAKEACTION request to the client to make some action "TAKEACTION *GAME ID*"
+	 */
+	@Override
+	public boolean takeAction(String GameID) {
+		if(this.handler!=null&&this.status == UserStatus.CONNECTED){
+		this.isWaitingForAction = true;
+		
+		
+		this.handler.send("TAKEACTION "+GameID);
+		while(this.isWaitingForAction);
+		return true;
+	}
+	return false;
+}
 	@Override
 	public boolean giveMoney(int money) {
 		if(totalCash  + money >0){
@@ -146,16 +184,21 @@ public class User implements UserInterface {
 		return false;
 	}
 
-	@Override
-	public boolean addPlayer(Player player) {
-		inGamePlayers.add(player);
-		return true;
+
+
+
+	public void giveHandler(ConnectionHandler handler) {
+	    this.handler = handler;
 	}
 
 	@Override
-	public boolean removePlayer(Player player) {
-		inGamePlayers.remove(player);
-		return true;
+	public void actionMaked() {
+		this.isWaitingForAction = false;
+		
+	}
+	public boolean isWaiting(){
+		
+		return this.isWaitingForAction;
 	}
 
 }

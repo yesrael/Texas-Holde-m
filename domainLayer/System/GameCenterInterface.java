@@ -5,8 +5,7 @@ import java.util.LinkedList;
 import Game.Game;
 import Game.GameInterface;
 import Game.GamePreferences;
-import Game.Player;
-import Game.Enum.GameType;
+import communicationLayer.ConnectionHandler;
 import user.User;
 
 public interface GameCenterInterface {
@@ -24,7 +23,7 @@ public interface GameCenterInterface {
 	     * @param password
 	     * @return true if the user exist and logged in successfully, other way return false
 		 */
-	   public boolean login(String ID, String password);
+	   public boolean login(String ID, String password,ConnectionHandler handler);
 	   
 	   /**
 		 * logout from the system 

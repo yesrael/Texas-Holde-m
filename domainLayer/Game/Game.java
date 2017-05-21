@@ -1,7 +1,6 @@
 package Game;
 
 import java.util.LinkedList;
-import java.util.Queue;
 
 import user.UserInterface;
 import System.GameLogs;
@@ -49,6 +48,7 @@ public class Game implements GameInterface, Runnable{
 	public Game(GamePreferences preferences, String GameID){
 		isCalled = false;
 		activePlayers = new LinkedList<Player>();
+		players = new LinkedList<Player>();
 		this.GameID = GameID;
 		deck = new Deck();
 		deck.shuffle();
@@ -84,10 +84,16 @@ public class Game implements GameInterface, Runnable{
 	}
 	
 	public Player[] getPlayers(){
-		return players.toArray(new Player[0]);
+		Player[] array = new Player[players.size()];
+		for(int i = 0; i < players.size(); i++) array[i] = players.get(i);
+		return array;
+		//return players.toArray(new Player[players.size()]);
 	}
 	public Player[] getActivePlayers(){
-		return activePlayers.toArray(new Player[0]);
+		Player[] array = new Player[activePlayers.size()];
+		for(int i = 0; i < activePlayers.size(); i++) array[i] = activePlayers.get(i);
+		return array;
+		//return activePlayers.toArray(new Player[activePlayers.size()]);
 	}
 
 	
@@ -218,7 +224,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		activePlayers.remove(player);
 		activePlayersNumber--;
 		log_game.addLog(user.getName() + "Fold for This round");
-		
+		user.actionMaked();
 		return true;}
 		log_game.addLog(user.getName() + "Failed to fold");
 		return false;
@@ -228,7 +234,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		Player player =getPlayerByUser(user);
 		if(player == CurrentPlayer && !isCalled){
 		log_game.addLog(user.getName() + "Checked for This Round");
-		
+		user.actionMaked();
 		return true;}
 		else {
 			
@@ -242,6 +248,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		if(player !=null &&player.getCash() >= money && money>=CurrentBet && player == CurrentPlayer)
 		 {cashOnTheTable += money;
 		 log_game.addLog(user.getName() + "Betted for This Round: "+ money);
+		 user.actionMaked();
 		return true;}
 		log_game.addLog(user.getName() + "Failed To Bet");
 		return false;
@@ -264,7 +271,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		}
 	}
 
-	private boolean dealCardsForPlayers() {
+	public boolean dealCardsForPlayers() {
 		for(int i=0;i < activePlayers.size(); i++ ){
 			Card card1 = deck.getCard();
 			Card card2 = deck.getCard();
@@ -277,7 +284,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		return true;
 	}
 	
-	private boolean dealCardsForTable(int number){
+	public boolean dealCardsForTable(int number){
 		
 		if(number + cardsOnTable > 5) return false;
 		
@@ -303,7 +310,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		this.cashOnTheTable = cashOnTheTable;
 	}
 
-	private Player[] checkWinner(){
+	public Player[] checkWinner(){
 		Player [] result = null;
 		 
 		if(activePlayers.size() == 1) {
@@ -350,7 +357,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		return result;
 	}
 	
-	private Player[] FourOfAKind(){
+	public Player[] FourOfAKind(){
 
 		LinkedList<Player> result = new LinkedList<Player>();
 		for(int i=0;i<activePlayers.size();i++){
@@ -393,7 +400,7 @@ public boolean isJoinAbleGame(UserInterface p){
 			
 		}
 		
-		return (Player[]) result.toArray();
+		return  result.toArray(new Player[result.size()]);
 	}
 	
 	
@@ -441,7 +448,7 @@ public boolean isJoinAbleGame(UserInterface p){
 			
 		}
 		
-		return (Player[]) result.toArray();
+		return  result.toArray(new Player[result.size()]);
 	}
 	
 	
@@ -488,7 +495,7 @@ public boolean isJoinAbleGame(UserInterface p){
 			
 		}
 		
-		return (Player[]) result.toArray();
+		return  result.toArray(new Player[result.size()]);
 	}
 	
 	private Player[] TwoPair(){
@@ -519,7 +526,7 @@ public boolean isJoinAbleGame(UserInterface p){
 			
 		}
 		
-		return (Player[]) result.toArray();
+		return  result.toArray(new Player[result.size()]);
 	}
 	
 	private Player[] FullHouse(){
@@ -573,7 +580,7 @@ public boolean isJoinAbleGame(UserInterface p){
 			
 			
 		}
-		return (Player[]) result.toArray();
+		return  result.toArray(new Player[result.size()]);
 	}
 	
 	private Player[] OnePair(){
@@ -606,7 +613,7 @@ public boolean isJoinAbleGame(UserInterface p){
 			
 		}
 		
-		return (Player[]) result.toArray();
+		return  result.toArray(new Player[result.size()]);
 	}
 	
 	private Player[] HighCard(){
@@ -630,7 +637,7 @@ public boolean isJoinAbleGame(UserInterface p){
 			
 		}
 		
-		return (Player[]) result.toArray();
+		return  result.toArray(new Player[result.size()]);
 	}
 	
 	private Player[] RoyalFlush(){
@@ -723,7 +730,7 @@ public boolean isJoinAbleGame(UserInterface p){
 	}
 
 
-	private void ExchangeWaitingPlayers() {
+	public void ExchangeWaitingPlayers() {
 		activePlayers = new LinkedList<Player>();
 		activePlayersNumber = 0;
 		for(Player ppp:players){
@@ -753,7 +760,7 @@ public boolean isJoinAbleGame(UserInterface p){
 				Player current = activePlayers.get((blindBit + currentPlayer) % activePlayersNumber);
 				int prevCashOnTheTable = cashOnTheTable;
 				CurrentPlayer = current;
-					if(!current.takeAction()){
+					if(!current.takeAction(this.GameID)){
 						leaveGame(current.getUser());
 					}
 					else if (cashOnTheTable > prevCashOnTheTable + CurrentBet) {

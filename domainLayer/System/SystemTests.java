@@ -25,17 +25,17 @@ public class SystemTests {
 	@Test
 	public void loginTests() {
 		GCI.register("222222222", "12345678", "israel", "bla@bla.com");
-		assertTrue(GCI.login("222222222", "12345678"));
+		assertTrue(GCI.login("222222222", "12345678",null));
 		
 		assertEquals(GCI.getUser("222222222").getStatus(), UserStatus.CONNECTED); //check that the user in connected status after login
-		assertFalse(GCI.login("222222222", "2525")); //wrong password for login
-		assertFalse(GCI.login("121212", "2525")); //there is no such user
+		assertFalse(GCI.login("222222222", "2525",null)); //wrong password for login
+		assertFalse(GCI.login("121212", "2525",null)); //there is no such user
 	}
 	
 	@Test
 	public void logoutTests() {
 		GCI.register("333", "12345678", "israel", "bla@bla.com");
-		GCI.login("333", "12345678");
+		GCI.login("333", "12345678",null);
 		
 		assertNotEquals(GCI.getUser("333").getStatus(), UserStatus.DISCONNECTED); //the user connected now
 		
