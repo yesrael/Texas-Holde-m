@@ -18,6 +18,21 @@ public class Game implements GameInterface, Runnable{
 	private LinkedList<Player> activePlayers;
 	private LinkedList<Player> players;
 	private Player CurrentPlayer;
+	public Player getCurrentPlayer() {
+		return CurrentPlayer;
+	}
+
+
+	public Card[] getTable() {
+		return table;
+	}
+
+
+	public int getCurrentBet() {
+		return CurrentBet;
+	}
+
+
 	private Deck deck;	
 	private GamePreferences preferences;
 	private int activePlayersNumber;
@@ -47,7 +62,10 @@ public class Game implements GameInterface, Runnable{
 	}
 	
 	public int getPlayerNumber(){
-		return activePlayers.size();
+		return players.size();
+	}
+	public int getBlindBit(){
+		return blindBit;
 	}
 	
 	public int getMinBid(){
@@ -66,9 +84,11 @@ public class Game implements GameInterface, Runnable{
 	}
 	
 	public Player[] getPlayers(){
+		return players.toArray(new Player[0]);
+	}
+	public Player[] getActivePlayers(){
 		return activePlayers.toArray(new Player[0]);
 	}
-	
 
 	
 	public boolean spectate(UserInterface p){
@@ -275,6 +295,14 @@ public boolean isJoinAbleGame(UserInterface p){
 		return true;
 	}
 	
+	public int getCashOnTheTable() {
+		return cashOnTheTable;
+	}
+
+	public void setCashOnTheTable(int cashOnTheTable) {
+		this.cashOnTheTable = cashOnTheTable;
+	}
+
 	private Player[] checkWinner(){
 		Player [] result = null;
 		 
@@ -689,6 +717,11 @@ public boolean isJoinAbleGame(UserInterface p){
 		dealCardsForPlayers();
 		log_game.addLog("Cards Dealed For the Players, And BlinBet Was Betted And The Game Starting");
 	}
+
+	public int getCardsOnTable() {
+		return cardsOnTable;
+	}
+
 
 	private void ExchangeWaitingPlayers() {
 		activePlayers = new LinkedList<Player>();

@@ -39,8 +39,7 @@ public interface GameCenterInterface {
 	    * @param user
 	    * @return true if the user can init game with the giver preferences, 
 	    */
-	   public boolean createGame(String UserID, GameType type,int Limit, int buyIn, int chipPolicy, int minBet, 
-			   int minPlayers, int maxPlayers, boolean spectatable,boolean leaguable);
+	   public String createGame(String UserID,GamePreferences preference);
 	   
 	   
 	   public boolean joinGame(String gameID, String UserID);
