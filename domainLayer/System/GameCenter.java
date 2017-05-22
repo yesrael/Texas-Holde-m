@@ -240,7 +240,7 @@ public class GameCenter implements GameCenterInterface{
 	   
    }
 
-	public boolean editUserPassword(String userID, String newPassword) {
+	public boolean editUserPassword(String userID, String oldPassword, String newPassword) {
 		if(newPassword.isEmpty()) {
 			  LOGGER.warning("Error: empty password is invalid");
 			  return false;
@@ -250,7 +250,8 @@ public class GameCenter implements GameCenterInterface{
 			  return false;
 		}
 		for (User usr : users) {
-		     if(usr.getID().equals(userID)) {
+		     if(usr.getID().equals(userID) && usr.getPassword().equals(oldPassword)) {
+		    	 
 		    	usr.editPassword(newPassword);
 		    	return true;
 		    	
@@ -259,22 +260,7 @@ public class GameCenter implements GameCenterInterface{
 		return false;
 	}
 
-	public boolean editUserName(String userID, String newName) {
-		if(newName.isEmpty()) {
-			  LOGGER.info("Error: empty name is invalid");
-			  return false;
-		}
-		
-		for (User usr : users) {
-		     if(usr.getID().equals(userID)) {
-		    	usr.editName(newName);
-		    	return true;
-		     }
-		}
-		return false;
-	}
-
-	public boolean editUserEmail(String userID, String newEmail) {
+	public boolean editUserEmail(String userID, String password, String newEmail) {
 		if(newEmail.isEmpty()) {
 			  LOGGER.info("Error: empty email is invalid");
 			  return false;
@@ -284,11 +270,16 @@ public class GameCenter implements GameCenterInterface{
 			 return false;
 		}
 		for (User usr : users) {
-		     if(usr.getID().equals(userID)) {
+		     if(usr.getID().equals(userID) && usr.getPassword().equals(password)) {
 		    	usr.editEmail(newEmail);
 		    	return true;
 		     }
 		}
+		return false;
+	}
+	
+	public boolean editUserAvatar(String userID, String newAvatar) {
+		//TODO implement edit user avatar
 		return false;
 	}
 
@@ -313,16 +304,16 @@ public class GameCenter implements GameCenterInterface{
 	public void logout(String ID) {
 		User user = getUser(ID);
 		if(user!=null){
-		for(Game g: games){
-			
-			leaveGame(g.getGameID(),ID);
-			
-		}
-	     user.setStatus(UserStatus.DISCONNECTED);
+			for(Game g: games){
+				
+				leaveGame(g.getGameID(),ID);
+				
+			}
+		     user.setStatus(UserStatus.DISCONNECTED);
 	 		
 		
 		}
-		}
+	}
 	
 	
 	

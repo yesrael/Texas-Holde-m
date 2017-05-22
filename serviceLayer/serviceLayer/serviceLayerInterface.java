@@ -26,17 +26,34 @@ public	String logout(String id);
 
 /**
  * 
- * @param request is string that has this format: "EDITPASS *USER NAME* *NEWPASSWORD*"
+ * @param request is string that has this format: "EDITPASS *USER NAME* *OLDPASSWORD* *NEWPASSWORD*"
  * @return "EDITPASS DONE" if succeed to edit the user password, "EDITPASS FAILED *MSG*" else
  */
 public	String editUserPassword(String request);
 
+/**
+ * 
+ * @param request is string that has this format: "EDITEMAIL *USER NAME* *PASSWORD* *NEWEMAIL*"
+ * @return "EDITEMAIL DONE" if succeed to edit the user password, "EDITEMAIL FAILED *MSG*" else
+ */
+public	String editUserEmail(String request);
+
+/**
+ * 
+ * TODO implement edit user avatar use case
+ */
+public	String editUserAvatar(String request);
+
 /** 
  * PLAYERS = "*PLAYER USER NAME* "{0,n}
+ * 
  * CARDS = "*CARD NUMBER* *CARD TYPE* "{0,n}
+ * 
  * GAME FULL DETAILS= "GameID=*ID*&players=*PLAYERS*&activePlayers=*PLAYERS*&blindBit=*NUMBER*&CurrentPlayer=*PLAYER USER NAME*&
  * table=*CARDS*&MaxPlayers=*NUMBER*&activePlayersNumber=*NUMBER*&cashOnTheTable=*NUMBER*&CurrentBet=*NUMBER*"
- * GAME PREF = gameTypePolicy=*GAME TYPE POLICY*&potLimit=*POT LIMIT*&buyInPolicy=*BUY IN POLICY*&chipPolicy=*CHIP POLICY*&minBet=*MIN BET*&minPlayersNum=*MIN PLAY NUM*&maxPlayersNum=*MAX PLAYER NUMBER*&spectatable=*T/F*&leaguable=*T/F*&league=*NUNBER*
+ * 
+ * GAME PREF = "gameTypePolicy=*GAME TYPE POLICY*&potLimit=*POT LIMIT*&buyInPolicy=*BUY IN POLICY*&chipPolicy=*CHIP POLICY*&minBet=*MIN BET*&minPlayersNum=*MIN PLAY NUM*&maxPlayersNum=*MAX PLAYER NUMBER*&spectatable=*T/F*&leaguable=*T/F*&league=*NUNBER*"
+ * 
  * @param request is string that has this format: "CREATEGAME *USER NAME* *GAME PREF*"
  * @return "CREATEGAME *USER NAME* *GAME FULL DETAILS*", "CREATEGAME FAILED" else
  */

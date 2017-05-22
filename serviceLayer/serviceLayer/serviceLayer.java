@@ -83,8 +83,8 @@ public class serviceLayer implements serviceLayerInterface {
 	@Override
 	public String editUserPassword(String request) {
         String[] requests = request.split(" ");
-        if(requests[0].equals("EDITPASS") && requests.length == 3){
-      	  if(gameCenter.editUserPassword(requests[1], requests[2])){
+        if(requests[0].equals("EDITPASS") && requests.length == 4){
+      	  if(gameCenter.editUserPassword(requests[1], requests[2], requests[3])){
       		  
       		  return "EDITPASS DONE";
       		  
@@ -96,6 +96,29 @@ public class serviceLayer implements serviceLayerInterface {
 		
 		return "EDITPASS FAILED";
 	}
+	
+	@Override
+	public String editUserEmail(String request) {
+		String[] requests = request.split(" ");
+        if(requests[0].equals("EDITEMAIL") && requests.length == 4){
+      	  if(gameCenter.editUserEmail(requests[1], requests[2], requests[3])){
+      		  
+      		  return "EDITEMAIL DONE";
+      		  
+      	  }
+      	  
+      	  
+        }  
+		
+		
+		return "EDITEMAIL FAILED";
+	}
+	
+	@Override
+	public String editUserAvatar(String request) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public String createGame(String request) {
@@ -105,7 +128,7 @@ public class serviceLayer implements serviceLayerInterface {
         	
         	
         	GamePreferences gamePerf =parseGamePrefs(requests[2]);
-        	String gameID =gameCenter.createGame(requests[1], gamePerf);
+        	String gameID = gameCenter.createGame(requests[1], gamePerf);
         	if( gameID!= ""){
         	return 	"CREATEGAME "+requests[1]+" " +GameToString((Game)gameCenter.getGameByID(gameID));
         		

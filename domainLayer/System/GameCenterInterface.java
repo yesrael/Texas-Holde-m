@@ -43,11 +43,11 @@ public interface GameCenterInterface {
 	   
 	   public boolean joinGame(String gameID, String UserID);
 	   
-	   public boolean editUserPassword(String userID, String newPassword);
+	   public boolean editUserPassword(String userID, String oldPassword, String newPassword);
 		
-	   public boolean editUserName(String userID, String newName);
-		
-	   public boolean editUserEmail(String userID, String newEmail);
+	   public boolean editUserEmail(String userID, String password, String newEmail);
+	   public boolean editUserAvatar(String userID, String newAvatar);
+	   
 		 public LinkedList<Game> searchGamesByPotSize(int potSize);
 		 public LinkedList<Game> searchGamesByPrefs(GamePreferences userPrefs);
 		 public LinkedList<Game> searchGamesByPlayerName(String name);
