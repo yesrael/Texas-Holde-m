@@ -132,6 +132,4 @@ public class GameTest {
 		assertTrue(winners.length !=0);
 		assertTrue(winners.length <=3);
 	}
-	
-
 }
