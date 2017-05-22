@@ -84,7 +84,7 @@ public class GamePreferences {
 		   CheckEquality.add(game->{
     		   checkingEquality = checkingEquality && game.isSpectatable()== this.spectatable;
     	   });
-		if(leaguable){
+		if(this.leaguable){
 			this.leaguable = leaguable;
 			this.league = league;
 			CheckPlayer.add((checker)player->{

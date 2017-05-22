@@ -1,6 +1,6 @@
 package serviceLayer;
 
-
+import communicationLayer.ConnectionHandler;
 
 public interface serviceLayerInterface {
 /**
@@ -15,7 +15,7 @@ public interface serviceLayerInterface {
     * @param request is string That has this format: "LOGIN *USER NAME* *PASSWORD*"
     * @return "LOGIN DONE *NAME* *CASH* *SCORE*" if succeed to login, "LOGIN FAILED" else
     */
-public 	String login(String request);
+   public String login(String request,ConnectionHandler handler);
 	
 /**
  * 

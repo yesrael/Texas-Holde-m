@@ -12,6 +12,7 @@ import Game.GameInterface;
 import Game.GamePreferences;
 import Game.Player;
 import Game.Enum.GameType;
+import communicationLayer.ConnectionHandler;
 import user.User;
 import user.UserInterface;
 import user.UserStatus;
@@ -20,8 +21,6 @@ public class GameCenter implements GameCenterInterface{
    private  ConcurrentLinkedQueue<User> users; 
    private ConcurrentLinkedQueue<Game> games;
 
-
-   private LinkedList<GameLogs> game_logs;
    private final static Logger LOGGER = Logger.getLogger(GameCenter.class.getName());
    private AtomicInteger gameIdGen;
    private static GameCenterInterface singleton = new GameCenter( );
@@ -32,7 +31,6 @@ public class GameCenter implements GameCenterInterface{
    private GameCenter(){
 	   users = new ConcurrentLinkedQueue<User>();
 	   games= new ConcurrentLinkedQueue<Game>();
-	   game_logs = new  LinkedList<GameLogs>();
 	   gameIdGen = new AtomicInteger(1);
    }
    
@@ -108,7 +106,6 @@ public class GameCenter implements GameCenterInterface{
    public String createGame(String UserID,GamePreferences preference){
 	   
 	   GamePreferences preferences;
-	   UserInterface creator = getUser(UserID);
 	   try {
 		   preferences = preference;
 	   }
@@ -295,11 +292,12 @@ public class GameCenter implements GameCenterInterface{
 		return false;
 	}
 
-	public boolean login(String ID, String password) {
+	public boolean login(String ID, String password,ConnectionHandler handler) {
 		for (User usr : users) {
 		     if(usr.getID().equals(ID)) {
 		    	 if(usr.getPassword().equals(password)) {
 		    		 usr.setStatus(UserStatus.CONNECTED);
+		    		 usr.giveHandler(handler);
 		    		 return true;
 		    	 }
 		    	 else {

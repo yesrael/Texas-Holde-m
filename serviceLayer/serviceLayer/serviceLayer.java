@@ -8,6 +8,7 @@ import Game.Player;
 import Game.Enum.GameType;
 import System.GameCenter;
 import System.GameCenterInterface;
+import communicationLayer.ConnectionHandler;
 import user.UserInterface;
 
 public class serviceLayer implements serviceLayerInterface {
@@ -43,11 +44,11 @@ public class serviceLayer implements serviceLayerInterface {
 	}
 
 	@Override
-	public String login(String request) {
+	public String login(String request,ConnectionHandler handler) {
         String[] requests = request.split(" ");
         if(requests[0].equals("LOGIN") && requests.length == 3){
       	  
-      	  if(gameCenter.login(requests[1], requests[2])){
+      	  if(gameCenter.login(requests[1], requests[2],handler)){
       		  
       		  UserInterface user=gameCenter.getUser(requests[1]);
       		  return "LOGIN DONE "+user.getName()+" "+user.getTotalCash()+" "+user.getScore();

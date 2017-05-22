@@ -2,10 +2,8 @@ package user;
 
 import java.util.LinkedList;
 
-import Game.Game;
 import Game.GameInterface;
-import Game.Player;
-import Game.Enum.GameType;
+import communicationLayer.ConnectionHandler;
 
 public interface UserInterface {
 
@@ -55,14 +53,12 @@ public interface UserInterface {
 	public void GameUpdated(GameInterface game) ;
 
 
-	public boolean takeAction() ;
+	public boolean takeAction(String GameID);
 
 
 
 	public boolean giveMoney(int money) ;
 
-
-	public boolean addPlayer(Player player) ;
-
-	public boolean removePlayer(Player player) ;
+	public void giveHandler(ConnectionHandler handler);
+	public void actionMaked();
 }
