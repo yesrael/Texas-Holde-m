@@ -13,7 +13,7 @@ public interface serviceLayerInterface {
    /**
     * 
     * @param request is string That has this format: "LOGIN *USER NAME* *PASSWORD*"
-    * @return "LOGIN DONE *NAME* *CASH* *SCORE*" if succeed to login, "LOGIN FAILED" else
+    * @return "LOGIN DONE *USER NAME* *NAME* *CASH* *SCORE* *LEAGUE*" if succeed to login, "LOGIN FAILED" else
     */
    public String login(String request,ConnectionHandler handler);
 	
@@ -27,9 +27,23 @@ public	String logout(String id);
 /**
  * 
  * @param request is string that has this format: "EDITPASS *USER NAME* *NEWPASSWORD*"
- * @return "EDITPASS DONE" if succeed to edit the user password, "EDITPASS FAILED *MSG*" else
+ * @return "EDITPASS DONE" if succeed to edit the user password, "EDITPASS FAILED" else
  */
 public	String editUserPassword(String request);
+
+/**
+ * 
+ * @param request is string that has this format: "EDITUSERNAME *USER NAME* *NEWNAME*"
+ * @return "EDITUSERNAME DONE" if succeed to edit the user password, "EDITUSERNAME FAILED" else
+ */
+public String editUserName(String request);
+
+/**
+ * 
+ * @param request is string that has this format: "EDITUSEREMAIL *USER NAME* *NEWEMAIL*"
+ * @return "EDITUSEREMAIL DONE" if succeed to edit the user password, "EDITUSEREMAIL FAILED" else
+ */
+public String editUserEmail(String request);
 
 /** 
  * PLAYERS = "*PLAYER USER NAME* "{0,n}

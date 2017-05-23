@@ -75,16 +75,14 @@ public void initialize() throws IOException {
 }
 public void process() throws IOException {
 	String msg;
-	final boolean[] isEnd=new boolean[1];
-	isEnd[0]=true;
-	while ((msg = in.readLine()) != null&&isEnd[0])
+	while ((msg = in.readLine()) != null)
 	{
 		System.out.println("Received \"" + msg + "\" from client");
 		
 	 protocol.processMessage(msg,resp->{
 		 synchronized (this) {
 		 if(resp!=null) out.println(resp);
-		 if(protocol.isEnd(resp)) isEnd[0] = false;
+		 System.out.println("SENDING: "+resp);
 		 } 
 	 },this);
 		
