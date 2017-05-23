@@ -116,7 +116,7 @@ public class GameCenter implements GameCenterInterface{
 	   
 	   Game newGame = new Game(preferences, gameIdGen.getAndIncrement()+"");
 	   games.add(newGame);
-	   if(joinGame(newGame.getGameID(),UserID)){
+	   if(joinGame(newGame.getGameID(),UserID)) {
 		   Thread th = new Thread(newGame);
 		   th.start();
 		   return newGame.getGameID();
@@ -152,12 +152,12 @@ public class GameCenter implements GameCenterInterface{
 	   
 	  LinkedList<Game> can_join = new LinkedList<Game>();
 
-		  for(Game i_game : games){			 
-			  
+		  for(Game i_game : games){
 				 if(userPrefs.checkEquality(i_game.getpreferences())){
 					  can_join.add(i_game);
 				 
-			  }}
+			  }
+				 }
 
 		  
 	  return  can_join;
@@ -220,8 +220,7 @@ public class GameCenter implements GameCenterInterface{
 	   GameInterface game = getGameByID(gameID);
 	   UserInterface user = getUser(UserID);
 	   if(game!=null && user !=null){
-		   
-		   return false;
+		   return game.joinGame(user);
 		   
 	   }
 	   
@@ -360,6 +359,17 @@ public class GameCenter implements GameCenterInterface{
 		return bet(userID, gameID, money);
 	}
 	
+	/**
+	 * FOR TESTING PURPOSE ONLY
+	 */
 	
+	public void removeAll() {
+		for (Game game : games) {
+			game.killGame();
+		}
+		this.users = new ConcurrentLinkedQueue<User>();
+		this.games = new ConcurrentLinkedQueue<Game>();
+		
+	}
 
 }

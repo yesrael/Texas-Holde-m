@@ -35,7 +35,7 @@ public class GamePreferences {
     	   });
     	   
     	   CheckEquality.add(game->{
-    		   checkingEquality = checkingEquality && game.getBuyInPolicy()== this.buyInPolicy;
+    		   checkingEquality = checkingEquality && game.getBuyInPolicy() == this.buyInPolicy;
     	   });
     	   
        }

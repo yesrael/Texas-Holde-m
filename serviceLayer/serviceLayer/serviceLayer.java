@@ -129,7 +129,7 @@ public class serviceLayer implements serviceLayerInterface {
         	
         	GamePreferences gamePerf =parseGamePrefs(requests[2]);
         	String gameID = gameCenter.createGame(requests[1], gamePerf);
-        	if( gameID!= ""){
+        	if(!gameID.equals("")){
         	return 	"CREATEGAME "+requests[1]+" " +GameToString((Game)gameCenter.getGameByID(gameID));
         		
         	}else 
@@ -339,7 +339,7 @@ public class serviceLayer implements serviceLayerInterface {
 			result = result+players[i].getUser().getID()+","+ players[i].getUser().getName()+",";
 		}
 		result = result + "&blindBit="+game.getBlindBit();
-		result = result + "&CurrentPlayer="+game.getCurrentPlayer().getUser().getID();
+		result = result + "&CurrentPlayer="+ (game.getCurrentPlayer() != null ? game.getCurrentPlayer().getUser().getID() : "");
 		result = result + "&table=";
 		
 		for(int i=0;i<game.getCardsOnTable();i++){

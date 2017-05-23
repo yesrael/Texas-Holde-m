@@ -1,6 +1,7 @@
 package Game;
 
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 import user.UserInterface;
 import System.GameLogs;
@@ -17,10 +18,10 @@ public class Game implements GameInterface, Runnable{
 	private LinkedList<Player> activePlayers;
 	private LinkedList<Player> players;
 	private Player CurrentPlayer;
+	
 	public Player getCurrentPlayer() {
 		return CurrentPlayer;
 	}
-
 
 	public Card[] getTable() {
 		return table;
@@ -47,6 +48,7 @@ public class Game implements GameInterface, Runnable{
 	
 	public Game(GamePreferences preferences, String GameID){
 		isCalled = false;
+		CurrentPlayer = null;
 		activePlayers = new LinkedList<Player>();
 		players = new LinkedList<Player>();
 		this.GameID = GameID;
@@ -114,7 +116,6 @@ public class Game implements GameInterface, Runnable{
 	 * @return true if this player can join the Game, else (there's more than MaxPlayers activePlayers, or his cash not enough) return false
 	 */
 	public boolean joinGame(UserInterface p){
-		
 		for(Player ppp: players)
 		{
 			if(ppp.getUser().getID().equals(p.getID())){
@@ -142,7 +143,7 @@ public class Game implements GameInterface, Runnable{
 			log_game.addLog(player.getUser().getName() + "failed to joing this Game because of his total cash");
 			return false;
 		}
-		else
+		
 		if(players.size() < preferences.getMaxPlayersNum()) {
 			synchronized (this) {
 				if(players.size() < preferences.getMaxPlayersNum()) {
@@ -167,7 +168,8 @@ public boolean isJoinAbleGame(UserInterface p){
 		for(Player ppp: players)
 		{
 			if(ppp.getUser().getID().equals(p.getID())){
-				return false;}
+				return false;
+			}
 			
 			
 		}
@@ -677,26 +679,33 @@ public boolean isJoinAbleGame(UserInterface p){
 		user_watches.forEach(a -> {a.GameUpdated(this);});
 		
 		players.forEach(a -> {a.GameUpdated(this);});
-		
+
 	}
+	
 	public void run() {
-		
-		while(activePlayersNumber > 0){
-			
+		try {
 			ExchangeWaitingPlayers();
-			GameUpated();
-			while (activePlayersNumber > 1){
+			while(activePlayersNumber > 0){
+				
 				ExchangeWaitingPlayers();
 				GameUpated();
-				initTableForNewTurn();
-				GameUpated();
-				oneTurn();
-				findWinnersAndGiveMoney();
-				GameUpated();
-
-				
-				
+				while (activePlayersNumber > 1){
+					ExchangeWaitingPlayers();
+					GameUpated();
+					initTableForNewTurn();
+					GameUpated();
+					oneTurn();
+					findWinnersAndGiveMoney();
+					GameUpated();
+	
+					
+					
+				}
 			}
+		}
+		catch(Exception e) {
+			System.out.println("Game " + GameID + " has crashed!");
+			e.printStackTrace();
 		}
 	}
 
@@ -787,6 +796,21 @@ public boolean isJoinAbleGame(UserInterface p){
 
 		}
 
+		@Override
+		public boolean equals(Object obj) {
+			Game game = (Game) obj;
+			return this.GameID.equals(game.getGameID());
+		}
+		
+		/**
+		 * KILL GAME
+		 */
+		
+		public void killGame() {
+			for (Player player : players) {
+				leaveGame(player.getUser());
+			}
+		}
 
 	}
 
