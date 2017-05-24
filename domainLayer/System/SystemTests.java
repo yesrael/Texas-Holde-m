@@ -62,12 +62,12 @@ public class SystemTests {
 		GCI.register("666", "12345678", "israel", "bla@bla.com");
 		
 		assertEquals(GCI.getUser("666").getEmail(), "bla@bla.com"); //the user's email match
-		GCI.editUserEmail("666", "12345678", "yesrael@gmail.com");
+		GCI.editUserEmail("666", "yesrael@gmail.com");
 
 		assertNotEquals(GCI.getUser("666").getEmail(), "bla@bla.com"); //now after changing the user's email, it don't match with "bla@bla.com"
 		assertEquals(GCI.getUser("666").getEmail(), "yesrael@gmail.com"); //make sure that the email really changed
 		
-		assertFalse(GCI.editUserEmail("666", "12345678", "yes.gmail.com")); //Can't change to invalid email address
+		assertFalse(GCI.editUserEmail("666", "yes.gmail.com")); //Can't change to invalid email address
 		
 	}
 

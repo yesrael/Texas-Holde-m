@@ -137,8 +137,7 @@ public class GameCenter implements GameCenterInterface{
 	   
 	  LinkedList<Game> can_join = new LinkedList<Game>();
 
-		  for(Game i_game : games){			 
-			  
+		  for(Game i_game : games){
 				 if(i_game.getpreferences().getGameTypePolicy()==GameType.POT_LIMIT && i_game.getpreferences().getLimit()==potSize){
 					  can_join.add(i_game);
 				 
@@ -258,8 +257,23 @@ public class GameCenter implements GameCenterInterface{
 		}
 		return false;
 	}
+	
+	public boolean editUserName(String userID, String newName) {
+		if(newName.isEmpty()) {
+			  LOGGER.info("Error: empty name is invalid");
+			  return false;
+		}
+		
+		for (User usr : users) {
+		     if(usr.getID().equals(userID)) {
+		    	usr.editName(newName);
+		    	return true;
+		     }
+		}
+		return false;
+	}
 
-	public boolean editUserEmail(String userID, String password, String newEmail) {
+	public boolean editUserEmail(String userID, String newEmail) {
 		if(newEmail.isEmpty()) {
 			  LOGGER.info("Error: empty email is invalid");
 			  return false;
@@ -269,7 +283,7 @@ public class GameCenter implements GameCenterInterface{
 			 return false;
 		}
 		for (User usr : users) {
-		     if(usr.getID().equals(userID) && usr.getPassword().equals(password)) {
+		     if(usr.getID().equals(userID)) {
 		    	usr.editEmail(newEmail);
 		    	return true;
 		     }

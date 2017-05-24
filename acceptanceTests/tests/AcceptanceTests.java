@@ -73,7 +73,7 @@ public class AcceptanceTests {
 		
 		//successful login
 		service.register("REG usr6 12345678 user6 user6@example.com");
-		assertEquals(service.login("LOGIN usr6 12345678", null), "LOGIN DONE user6 0 0");
+		assertEquals(service.login("LOGIN usr6 12345678", null), "LOGIN DONE usr6 user6 0 0 -1");
 	}
 
 	@Test
@@ -111,23 +111,20 @@ public class AcceptanceTests {
 	@Test
 	public void editUserEmailTestCase() {
 		System.out.println("editUserEmailTestCase");
+		service.register("REG usr6 12345678 user6 user6@example.com");
 		//missing argument
-		assertEquals(service.editUserEmail("*USER_NAME* *PASSWORD* *NEWEMAIL*"), "EDITEMAIL FAILED");
-		assertEquals(service.editUserEmail("EDITEMAIL *PASSWORD* *NEWEMAIL*"), "EDITEMAIL FAILED");
-		assertEquals(service.editUserEmail("EDITEMAIL *USER_NAME* *NEWEMAIL*"), "EDITEMAIL FAILED");
-		assertEquals(service.editUserEmail("EDITEMAIL *USER_NAME* *PASSWORD*"), "EDITEMAIL FAILED");
-		
-		//incorrect password
-		assertEquals(service.editUserEmail("EDITEMAIL usr6 1234456123 new@example.com"), "EDITEMAIL FAILED");
+		assertEquals(service.editUserEmail("*USER_NAME* *NEWEMAIL*"), "EDITUSEREMAIL FAILED");
+		assertEquals(service.editUserEmail("EDITUSEREMAIL *NEWEMAIL*"), "EDITUSEREMAIL FAILED");
+		assertEquals(service.editUserEmail("EDITUSEREMAIL *USER_NAME*"), "EDITUSEREMAIL FAILED");
 		
 		//illegal email
-		assertEquals(service.editUserEmail("EDITEMAIL usr6 12345678 newEmail"), "EDITEMAIL FAILED");
-		assertEquals(service.editUserEmail("EDITEMAIL usr6 12345678 @.com"), "EDITEMAIL FAILED");
-		assertEquals(service.editUserEmail("EDITEMAIL usr6 12345678 asd@.com"), "EDITEMAIL FAILED");
-		assertEquals(service.editUserEmail("EDITEMAIL usr6 12345678 asd@qwe"), "EDITEMAIL FAILED");
+		assertEquals(service.editUserEmail("EDITUSEREMAIL usr6 newEmail"), "EDITUSEREMAIL FAILED");
+		assertEquals(service.editUserEmail("EDITUSEREMAIL usr6 @.com"), "EDITUSEREMAIL FAILED");
+		assertEquals(service.editUserEmail("EDITUSEREMAIL usr6 asd@.com"), "EDITUSEREMAIL FAILED");
+		assertEquals(service.editUserEmail("EDITUSEREMAIL usr6 asd@qwe"), "EDITUSEREMAIL FAILED");
 		
 		//successful email editing
-		assertEquals(service.editUserEmail("EDITEMAIL usr6 12345678 new@example.com"), "EDITEMAIL FAILED");
+		assertEquals(service.editUserEmail("EDITUSEREMAIL usr6 new@example.com"), "EDITUSEREMAIL DONE");
 		
 	}
 	
@@ -159,7 +156,7 @@ public class AcceptanceTests {
 		//non existing user
 		assertEquals(service.createGame("CREATEGAME usr " + prefs), "CREATEGAME FAILED");
 		
-		User senior = new User("sen_user", "123456789", "firstname", "first@mail.com", 1000, 100000, 1);
+		User senior = new User("sen_user", "123456789", "firstname", "first@mail.com", 1000, 100000, 0);
 		gameCenter.addUser(senior);
 		//successful create game
 		assertNotEquals(service.createGame("CREATEGAME sen_user " + prefs), "CREATEGAME FAILED");
@@ -180,7 +177,7 @@ public class AcceptanceTests {
 		assertEquals(service.listJoinableGames("*USER_NAME*"), "LISTJOINABLEGAMES FAILED");
 		assertEquals(service.listJoinableGames("LISTJOINABLEGAMES"), "LISTJOINABLEGAMES FAILED");
 		
-		User senior = new User("senior", "123456789", "name2", "name2@mail.com", Integer.MAX_VALUE, 100000, 1);
+		User senior = new User("senior", "123456789", "name2", "name2@mail.com", Integer.MAX_VALUE, 100000, 5);
 		gameCenter.addUser(senior);
 		assertEquals(service.listJoinableGames("LISTJOINABLEGAMES senior").split(" ")[1], "DONE");
 		
@@ -200,10 +197,10 @@ public class AcceptanceTests {
 		}
 		assertEquals(c, 3);
 		
-		User noLeague = new User("new", "123456789", "new", "new@mail.com", Integer.MAX_VALUE, 100000, 0);
+		User noLeague = new User("new", "123456789", "new", "new@mail.com", Integer.MAX_VALUE, 100000, -1);
 		gameCenter.addUser(noLeague);
 		
-		//new player with league 0
+		//new player with league -1
 		assertTrue(service.listJoinableGames("LISTJOINABLEGAMES new").split(" ").length > 3);
 		
 		User poor = new User("poor", "123456789", "poor", "poor@mail.com", 0, 0, 0);
@@ -220,7 +217,7 @@ public class AcceptanceTests {
 		assertEquals(service.searchGamesByPrefs("*GAME_PREF*"), "SEARCHGAMESBYPREFS FAILED");
 		assertEquals(service.searchGamesByPrefs("SEARCHGAMESBYPREFS"), "SEARCHGAMESBYPREFS FAILED");
 		
-		User senior = new User("sen_user", "123456789", "firstname", "first@mail.com", 1000, 100000, 1);
+		User senior = new User("sen_user", "123456789", "firstname", "first@mail.com", 1000, 100000, 5);
 		gameCenter.addUser(senior);
 		try {
 			gameCenter.createGame("sen_user", new GamePreferences(GameType.NO_LIMIT, 0, 0, 10, 0, 2, 8, true, true, 5));
@@ -262,7 +259,7 @@ public class AcceptanceTests {
 		assertEquals(service.searchGamesByPlayerName("*USER_NAME*"), "SEARCHGAMESBYPLAYERNAME FAILED");
 		assertEquals(service.searchGamesByPlayerName("SEARCHGAMESBYPLAYERNAME"), "SEARCHGAMESBYPLAYERNAME FAILED");
 		
-		User senior = new User("sen_user", "123456789", "name1", "first@mail.com", 1000, 100000, 1);
+		User senior = new User("sen_user", "123456789", "name1", "first@mail.com", 1000, 100000, 5);
 		gameCenter.addUser(senior);
 		try {
 			gameCenter.createGame("sen_user", new GamePreferences(GameType.NO_LIMIT, 0, 0, 10, 0, 2, 8, true, true, 5));
@@ -290,7 +287,7 @@ public class AcceptanceTests {
 		assertEquals(service.searchGamesByPotSize("*POT_SIZE*"), "SEARCHGAMESBYPOTSIZE FAILED");
 		assertEquals(service.searchGamesByPotSize("SEARCHGAMESBYPOTSIZE"), "SEARCHGAMESBYPOTSIZE FAILED");
 		
-		User senior = new User("sen_user", "123456789", "name1", "first@mail.com", 1000, 100000, 1);
+		User senior = new User("sen_user", "123456789", "name1", "first@mail.com", 1000, 100000, 5);
 		gameCenter.addUser(senior);
 		try {
 			gameCenter.createGame("sen_user", new GamePreferences(GameType.NO_LIMIT, 100, 0, 10, 0, 2, 8, true, true, 5));

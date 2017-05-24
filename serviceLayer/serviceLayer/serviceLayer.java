@@ -51,7 +51,7 @@ public class serviceLayer implements serviceLayerInterface {
       	  if(gameCenter.login(requests[1], requests[2],handler)){
       		  
       		  UserInterface user=gameCenter.getUser(requests[1]);
-      		  return "LOGIN DONE "+user.getName()+" "+user.getTotalCash()+" "+user.getScore();
+      		  return "LOGIN DONE "+user.getID()+" "+user.getName()+" "+user.getTotalCash()+" "+user.getScore()+" "+user.getLeague();
       		  
       	  }
       	  
@@ -98,12 +98,12 @@ public class serviceLayer implements serviceLayerInterface {
 	}
 	
 	@Override
-	public String editUserEmail(String request) {
-		String[] requests = request.split(" ");
-        if(requests[0].equals("EDITEMAIL") && requests.length == 4){
-      	  if(gameCenter.editUserEmail(requests[1], requests[2], requests[3])){
+	public String editUserName(String request) {
+        String[] requests = request.split(" ");
+        if(requests[0].equals("EDITUSERNAME") && requests.length == 3){
+      	  if(gameCenter.editUserName(requests[1], requests[2])){
       		  
-      		  return "EDITEMAIL DONE";
+      		  return "EDITUSERNAME DONE";
       		  
       	  }
       	  
@@ -111,7 +111,24 @@ public class serviceLayer implements serviceLayerInterface {
         }  
 		
 		
-		return "EDITEMAIL FAILED";
+		return "EDITUSERNAME FAILED";
+	}
+	
+	@Override
+	public String editUserEmail(String request) {
+        String[] requests = request.split(" ");
+        if(requests[0].equals("EDITUSEREMAIL") && requests.length == 3){
+      	  if(gameCenter.editUserEmail(requests[1], requests[2])){
+      		  
+      		  return "EDITUSEREMAIL DONE";
+      		  
+      	  }
+      	  
+      	  
+        }  
+		
+		
+		return "EDITUSEREMAIL FAILED";
 	}
 	
 	@Override
@@ -128,9 +145,9 @@ public class serviceLayer implements serviceLayerInterface {
         	
         	
         	GamePreferences gamePerf =parseGamePrefs(requests[2]);
-        	String gameID = gameCenter.createGame(requests[1], gamePerf);
+        	String gameID =gameCenter.createGame(requests[1], gamePerf);
         	if(!gameID.equals("")){
-        	return 	"CREATEGAME "+requests[1]+" " +GameToString((Game)gameCenter.getGameByID(gameID));
+        	return 	"CREATEGAME "+requests[1]+" DONE " +GameToString((Game)gameCenter.getGameByID(gameID));
         		
         	}else 
         		
@@ -312,7 +329,7 @@ public class serviceLayer implements serviceLayerInterface {
               
       		
       		  
-      		  return "JOINGAME DONE "+GameToString((Game)gameCenter.getGameByID(requests[1]));
+      		  return "JOINGAME "+requests[1]+" "+requests[2]+" DONE "+GameToString((Game)gameCenter.getGameByID(requests[1]));
       		  
       	  }
       	  return "JOINGAME FAILED Can't join the game";
@@ -377,7 +394,7 @@ public class serviceLayer implements serviceLayerInterface {
               
       		
       		  
-      		  return "SPECTATEGAME DONE "+GameToString((Game)gameCenter.getGameByID(requests[1]));
+      		  return "SPECTATEGAME "+requests[1]+" "+requests[2]+" DONE "+GameToString((Game)gameCenter.getGameByID(requests[1]));
       		  
       	  }
       	  return "SPECTATEGAME FAILED Can't spectate the game";
@@ -432,6 +449,4 @@ public class serviceLayer implements serviceLayerInterface {
 		
         return "ACTION " +requests[1]+" "+requests[2]+" "+requests[3]+" FAILED";
 	}
-
-
 }

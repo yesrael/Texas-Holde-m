@@ -13,7 +13,7 @@ public interface serviceLayerInterface {
    /**
     * 
     * @param request is string That has this format: "LOGIN *USER NAME* *PASSWORD*"
-    * @return "LOGIN DONE *NAME* *CASH* *SCORE*" if succeed to login, "LOGIN FAILED" else
+    * @return "LOGIN DONE *USER NAME* *NAME* *CASH* *SCORE* *LEAGUE*" if succeed to login, "LOGIN FAILED" else
     */
    public String login(String request,ConnectionHandler handler);
 	
@@ -33,16 +33,19 @@ public	String editUserPassword(String request);
 
 /**
  * 
- * @param request is string that has this format: "EDITEMAIL *USER NAME* *PASSWORD* *NEWEMAIL*"
- * @return "EDITEMAIL DONE" if succeed to edit the user password, "EDITEMAIL FAILED *MSG*" else
+ * @param request is string that has this format: "EDITUSERNAME *USER NAME* *NEWNAME*"
+ * @return "EDITUSERNAME DONE" if succeed to edit the user password, "EDITUSERNAME FAILED" else
  */
-public	String editUserEmail(String request);
+public String editUserName(String request);
 
 /**
  * 
- * TODO implement edit user avatar use case
+ * @param request is string that has this format: "EDITUSEREMAIL *USER NAME* *NEWEMAIL*"
+ * @return "EDITUSEREMAIL DONE" if succeed to edit the user password, "EDITUSEREMAIL FAILED" else
  */
-public	String editUserAvatar(String request);
+public String editUserEmail(String request);
+
+public String editUserAvatar(String request);
 
 /** 
  * PLAYERS = "*PLAYER USER NAME* "{0,n}
@@ -55,7 +58,7 @@ public	String editUserAvatar(String request);
  * GAME PREF = "gameTypePolicy=*GAME TYPE POLICY*&potLimit=*POT LIMIT*&buyInPolicy=*BUY IN POLICY*&chipPolicy=*CHIP POLICY*&minBet=*MIN BET*&minPlayersNum=*MIN PLAY NUM*&maxPlayersNum=*MAX PLAYER NUMBER*&spectatable=*T/F*&leaguable=*T/F*&league=*NUNBER*"
  * 
  * @param request is string that has this format: "CREATEGAME *USER NAME* *GAME PREF*"
- * @return "CREATEGAME *USER NAME* *GAME FULL DETAILS*", "CREATEGAME FAILED" else
+ * @return "CREATEGAME *USER NAME* DONE *GAME FULL DETAILS*", "CREATEGAME FAILED" else
  */
 public	String createGame(String request);
 
