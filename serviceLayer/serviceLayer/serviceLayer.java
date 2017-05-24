@@ -107,7 +107,7 @@ public class serviceLayer implements serviceLayerInterface {
         	GamePreferences gamePerf =parseGamePrefs(requests[2]);
         	String gameID =gameCenter.createGame(requests[1], gamePerf);
         	if( gameID!= ""){
-        	return 	"CREATEGAME "+requests[1]+" " +GameToString((Game)gameCenter.getGameByID(gameID));
+        	return 	"CREATEGAME "+requests[1]+" DONE " +GameToString((Game)gameCenter.getGameByID(gameID));
         		
         	}else 
         		
@@ -289,7 +289,7 @@ public class serviceLayer implements serviceLayerInterface {
               
       		
       		  
-      		  return "JOINGAME DONE "+requests[1]+" "+requests[2]+" "+GameToString((Game)gameCenter.getGameByID(requests[1]));
+      		  return "JOINGAME "+requests[1]+" "+requests[2]+" DONE "+GameToString((Game)gameCenter.getGameByID(requests[1]));
       		  
       	  }
       	  return "JOINGAME FAILED Can't join the game";
@@ -354,7 +354,7 @@ public class serviceLayer implements serviceLayerInterface {
               
       		
       		  
-      		  return "SPECTATEGAME DONE "+GameToString((Game)gameCenter.getGameByID(requests[1]));
+      		  return "SPECTATEGAME "+requests[1]+" "+requests[2]+" DONE "+GameToString((Game)gameCenter.getGameByID(requests[1]));
       		  
       	  }
       	  return "SPECTATEGAME FAILED Can't spectate the game";
