@@ -49,23 +49,12 @@ public class SystemTests {
 		GCI.register("444", "12345678", "israel", "bla@bla.com");
 		
 		assertEquals(GCI.getUser("444").getPassword(), "12345678"); //the user's password match
-		GCI.editUserPassword("444", "12123434");
+		GCI.editUserPassword("444", "12345678", "12123434");
 
 		assertNotEquals(GCI.getUser("444").getPassword(), "12345678"); //now after changing the user's password, it don't match with "12345678"
 		assertEquals(GCI.getUser("444").getPassword(), "12123434"); //make sure that the password really changed
 		
-		assertFalse(GCI.editUserPassword("444", "1212")); //Can't change to short password
-	}
-	
-	@Test
-	public void editUserNameTest() {
-		GCI.register("555", "12345678", "israel", "bla@bla.com");
-		
-		assertEquals(GCI.getUser("555").getName(), "israel"); //the user's name match
-		GCI.editUserName("555", "roee");
-
-		assertNotEquals(GCI.getUser("555").getName(), "israel"); //now after changing the user's name, it don't match with "israel"
-		assertEquals(GCI.getUser("555").getName(), "roee"); //make sure that the name really changed
+		assertFalse(GCI.editUserPassword("444", "12123434", "1212")); //Can't change to short password
 	}
 	
 	@Test

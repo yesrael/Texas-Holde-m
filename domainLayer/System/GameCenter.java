@@ -116,7 +116,7 @@ public class GameCenter implements GameCenterInterface{
 	   
 	   Game newGame = new Game(preferences, gameIdGen.getAndIncrement()+"");
 	   games.add(newGame);
-	   if(joinGame(newGame.getGameID(),UserID)){
+	   if(joinGame(newGame.getGameID(),UserID)) {
 		   Thread th = new Thread(newGame);
 		   th.start();
 		   return newGame.getGameID();
@@ -137,8 +137,7 @@ public class GameCenter implements GameCenterInterface{
 	   
 	  LinkedList<Game> can_join = new LinkedList<Game>();
 
-		  for(Game i_game : games){			 
-			  
+		  for(Game i_game : games){
 				 if(i_game.getpreferences().getGameTypePolicy()==GameType.POT_LIMIT && i_game.getpreferences().getLimit()==potSize){
 					  can_join.add(i_game);
 				 
@@ -152,12 +151,12 @@ public class GameCenter implements GameCenterInterface{
 	   
 	  LinkedList<Game> can_join = new LinkedList<Game>();
 
-		  for(Game i_game : games){			 
-			  
+		  for(Game i_game : games){
 				 if(userPrefs.checkEquality(i_game.getpreferences())){
 					  can_join.add(i_game);
 				 
-			  }}
+			  }
+				 }
 
 		  
 	  return  can_join;
@@ -220,8 +219,7 @@ public class GameCenter implements GameCenterInterface{
 	   GameInterface game = getGameByID(gameID);
 	   UserInterface user = getUser(UserID);
 	   if(game!=null && user !=null){
-		   
-		   return false;
+		   return game.joinGame(user);
 		   
 	   }
 	   
@@ -240,7 +238,7 @@ public class GameCenter implements GameCenterInterface{
 	   
    }
 
-	public boolean editUserPassword(String userID, String newPassword) {
+	public boolean editUserPassword(String userID, String oldPassword, String newPassword) {
 		if(newPassword.isEmpty()) {
 			  LOGGER.warning("Error: empty password is invalid");
 			  return false;
@@ -250,7 +248,8 @@ public class GameCenter implements GameCenterInterface{
 			  return false;
 		}
 		for (User usr : users) {
-		     if(usr.getID().equals(userID)) {
+		     if(usr.getID().equals(userID) && usr.getPassword().equals(oldPassword)) {
+		    	 
 		    	usr.editPassword(newPassword);
 		    	return true;
 		    	
@@ -258,7 +257,7 @@ public class GameCenter implements GameCenterInterface{
 		}
 		return false;
 	}
-
+	
 	public boolean editUserName(String userID, String newName) {
 		if(newName.isEmpty()) {
 			  LOGGER.info("Error: empty name is invalid");
@@ -291,6 +290,11 @@ public class GameCenter implements GameCenterInterface{
 		}
 		return false;
 	}
+	
+	public boolean editUserAvatar(String userID, String newAvatar) {
+		//TODO implement edit user avatar
+		return false;
+	}
 
 	public boolean login(String ID, String password,ConnectionHandler handler) {
 		for (User usr : users) {
@@ -313,16 +317,16 @@ public class GameCenter implements GameCenterInterface{
 	public void logout(String ID) {
 		User user = getUser(ID);
 		if(user!=null){
-		for(Game g: games){
-			
-			leaveGame(g.getGameID(),ID);
-			
-		}
-	     user.setStatus(UserStatus.DISCONNECTED);
+			for(Game g: games){
+				
+				leaveGame(g.getGameID(),ID);
+				
+			}
+		     user.setStatus(UserStatus.DISCONNECTED);
 	 		
 		
 		}
-		}
+	}
 	
 	
 	
@@ -369,6 +373,17 @@ public class GameCenter implements GameCenterInterface{
 		return bet(userID, gameID, money);
 	}
 	
+	/**
+	 * FOR TESTING PURPOSE ONLY
+	 */
 	
+	public void removeAll() {
+		for (Game game : games) {
+			game.killGame();
+		}
+		this.users = new ConcurrentLinkedQueue<User>();
+		this.games = new ConcurrentLinkedQueue<Game>();
+		
+	}
 
 }

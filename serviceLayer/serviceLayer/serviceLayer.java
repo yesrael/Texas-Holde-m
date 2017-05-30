@@ -83,8 +83,8 @@ public class serviceLayer implements serviceLayerInterface {
 	@Override
 	public String editUserPassword(String request) {
         String[] requests = request.split(" ");
-        if(requests[0].equals("EDITPASS") && requests.length == 3){
-      	  if(gameCenter.editUserPassword(requests[1], requests[2])){
+        if(requests[0].equals("EDITPASS") && requests.length == 4){
+      	  if(gameCenter.editUserPassword(requests[1], requests[2], requests[3])){
       		  
       		  return "EDITPASS DONE";
       		  
@@ -96,6 +96,46 @@ public class serviceLayer implements serviceLayerInterface {
 		
 		return "EDITPASS FAILED";
 	}
+	
+	@Override
+	public String editUserName(String request) {
+        String[] requests = request.split(" ");
+        if(requests[0].equals("EDITUSERNAME") && requests.length == 3){
+      	  if(gameCenter.editUserName(requests[1], requests[2])){
+      		  
+      		  return "EDITUSERNAME DONE";
+      		  
+      	  }
+      	  
+      	  
+        }  
+		
+		
+		return "EDITUSERNAME FAILED";
+	}
+	
+	@Override
+	public String editUserEmail(String request) {
+        String[] requests = request.split(" ");
+        if(requests[0].equals("EDITUSEREMAIL") && requests.length == 3){
+      	  if(gameCenter.editUserEmail(requests[1], requests[2])){
+      		  
+      		  return "EDITUSEREMAIL DONE";
+      		  
+      	  }
+      	  
+      	  
+        }  
+		
+		
+		return "EDITUSEREMAIL FAILED";
+	}
+	
+	@Override
+	public String editUserAvatar(String request) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public String createGame(String request) {
@@ -106,7 +146,7 @@ public class serviceLayer implements serviceLayerInterface {
         	
         	GamePreferences gamePerf =parseGamePrefs(requests[2]);
         	String gameID =gameCenter.createGame(requests[1], gamePerf);
-        	if( gameID!= ""){
+        	if(!gameID.equals("")){
         	return 	"CREATEGAME "+requests[1]+" DONE " +GameToString((Game)gameCenter.getGameByID(gameID));
         		
         	}else 
@@ -316,7 +356,7 @@ public class serviceLayer implements serviceLayerInterface {
 			result = result+players[i].getUser().getID()+","+ players[i].getUser().getName()+",";
 		}
 		result = result + "&blindBit="+game.getBlindBit();
-		result = result + "&CurrentPlayer="+game.getCurrentPlayer().getUser().getID();
+		result = result + "&CurrentPlayer="+ (game.getCurrentPlayer() != null ? game.getCurrentPlayer().getUser().getID() : "");
 		result = result + "&table=";
 		
 		for(int i=0;i<game.getCardsOnTable();i++){
@@ -409,38 +449,4 @@ public class serviceLayer implements serviceLayerInterface {
 		
         return "ACTION " +requests[1]+" "+requests[2]+" "+requests[3]+" FAILED";
 	}
-	@Override
-	public String editUserName(String request) {
-        String[] requests = request.split(" ");
-        if(requests[0].equals("EDITUSERNAME") && requests.length == 3){
-      	  if(gameCenter.editUserName(requests[1], requests[2])){
-      		  
-      		  return "EDITUSERNAME DONE";
-      		  
-      	  }
-      	  
-      	  
-        }  
-		
-		
-		return "EDITUSERNAME FAILED";
-	}
-	@Override
-	public String editUserEmail(String request) {
-        String[] requests = request.split(" ");
-        if(requests[0].equals("EDITUSEREMAIL") && requests.length == 3){
-      	  if(gameCenter.editUserEmail(requests[1], requests[2])){
-      		  
-      		  return "EDITUSEREMAIL DONE";
-      		  
-      	  }
-      	  
-      	  
-        }  
-		
-		
-		return "EDITUSEREMAIL FAILED";
-	}
-
-
 }
