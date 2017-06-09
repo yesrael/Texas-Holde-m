@@ -58,7 +58,7 @@ public class MyServerProtocol implements ServerProtocol<String>{
 			
 	        }
 	        else{
-	        	callback.sendMessage("EDITPASS FAILED USER NOT LOGGED IN");
+	        	callback.sendMessage("EDITUSERNAME FAILED USER NOT LOGGED IN");
 	        }
 		}
 		else if(parts[0].equals("EDITUSEREMAIL")){
@@ -67,7 +67,16 @@ public class MyServerProtocol implements ServerProtocol<String>{
 			
 	        }
 	        else{
-	        	callback.sendMessage("EDITPASS FAILED USER NOT LOGGED IN");
+	        	callback.sendMessage("EDITUSEREMAIL FAILED USER NOT LOGGED IN");
+	        }
+		}
+		else if(parts[0].equals("EDITUSERAVATAR")){
+	        if(this.name!=null&&parts[1].equals(name)){
+	        	callback.sendMessage(serviceLayerr.editUserAvatar(msg));
+			
+	        }
+	        else{
+	        	callback.sendMessage("EDITUSERAVATAR FAILED USER NOT LOGGED IN");
 	        }
 		}
 		else if(parts[0].equals("CREATEGAME")){

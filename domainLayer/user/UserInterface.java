@@ -2,6 +2,7 @@ package user;
 
 import java.util.LinkedList;
 
+import Game.Game;
 import Game.GameInterface;
 import communicationLayer.ConnectionHandler;
 
@@ -59,10 +60,14 @@ public interface UserInterface {
 
 
 	public void giveHandler(ConnectionHandler handler);
-	public void actionMaked();
+	
 
 	boolean changeMoney(int money);
 	public String getAvatar();
 
 	public void setAvatar(String avatar) ;
+
+	void actionMaked(String GameID);
+
+	public void SendMSG(String msg);
 }

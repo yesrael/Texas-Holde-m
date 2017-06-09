@@ -1,6 +1,9 @@
 package serviceLayer;
 
+import java.util.Arrays;
 import java.util.LinkedList;
+
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 import Game.Card;
 import Game.Game;
@@ -52,7 +55,7 @@ public class serviceLayer implements serviceLayerInterface {
       	  if(gameCenter.login(requests[1], requests[2],handler)){
       		  
       		  UserInterface user=gameCenter.getUser(requests[1]);
-      		  return "LOGIN DONE "+user.getID()+" "+user.getName()+" "+user.getTotalCash()+" "+user.getScore()+" "+user.getLeague();
+      		  return "LOGIN DONE "+user.getID()+" "+user.getName()+" "+user.getTotalCash()+" "+user.getScore()+" "+user.getLeague()+" "+user.getAvatar();
       		  
       	  }
       	  
@@ -132,10 +135,27 @@ public class serviceLayer implements serviceLayerInterface {
 		return "EDITUSEREMAIL FAILED";
 	}
 	
+	
+	/**
+	 * 
+	 * @param request is string that has this format: "EDITUSERAVATAR *USER NAME* *NEW AVATAR*"
+	 * @return "EDITUSERAVATAR DONE" if succeed to edit the user password, "EDITUSERAVATAR FAILED" else
+	 */
 	@Override
 	public String editUserAvatar(String request) {
-		// TODO Auto-generated method stub
-		return null;
+        String[] requests = request.split(" ");
+        if(requests[0].equals("EDITUSERAVATAR") && requests.length == 3){
+      	  if(gameCenter.editUserAvatar(requests[1], requests[2])){
+      		  
+      		  return "EDITUSERAVATAR DONE";
+      		  
+      	  }
+      	  
+      	  
+        }  
+		
+		
+		return "EDITUSERAVATAR FAILED";
 	}
 
 	@Override
@@ -361,14 +381,14 @@ public class serviceLayer implements serviceLayerInterface {
 		Player[] players= game.getPlayers();
 		for(int i=0;i<players.length;i++){
 			String hand = getCardsPlayer(players, i);
-			result = result+players[i].getUser().getID()+","+ players[i].getUser().getName()+"," +players[i].getUser().getTotalCash()+","+ hand+","+players[i].getUser().getAvatar()+", ";
+			result = result+players[i].getUser().getID()+","+ players[i].getUser().getName()+"," +players[i].getUser().getTotalCash()+","+ hand+","+players[i].getUser().getAvatar()+",";
 
 		}
 		result = result + "&activePlayers=";
 		 players= game.getActivePlayers();
 		for(int i=0;i<players.length;i++){
 			String hand = getCardsPlayer(players, i);
-			result = result+players[i].getUser().getID()+","+ players[i].getUser().getName()+"," +players[i].getUser().getTotalCash()+","+ hand+","+players[i].getUser().getAvatar()+", ";
+			result = result+players[i].getUser().getID()+","+ players[i].getUser().getName()+"," +players[i].getUser().getTotalCash()+","+ hand+","+players[i].getUser().getAvatar()+",";
 
 		}
 		result = result + "&blindBit="+game.getBlindBit();
@@ -427,7 +447,6 @@ public class serviceLayer implements serviceLayerInterface {
         String[] requests = request.split(" ");
         if(requests[0].equals("LEAVEGAME") && requests.length == 3){
       	  if(gameCenter.leaveGame(requests[1], requests[2])){
-      		  
       		  return "LEAVEGAME "+requests[1]+" "+requests[2]+" DONE";
       		  
       	  }
@@ -444,25 +463,44 @@ public class serviceLayer implements serviceLayerInterface {
         String[] requests = action.split(" ");
         if(requests[0].equals("ACTION")){
         	if(requests[1].equals("FOLD") && requests.length==4){
-        		if(gameCenter.fold(requests[3], requests[2]))
-        			  return "ACTION " +requests[1]+" "+requests[2]+" "+requests[3]+" DONE";
+        		if(gameCenter.fold(requests[3], requests[2])){
+        			  return "ACTION " +requests[1]+" "+requests[2]+" "+requests[3]+" DONE";}
         	}
         	else if (requests[1].equals("CHECK") && requests.length==4){
-        		if(gameCenter.check(requests[3], requests[2]))
-      			  return "ACTION " +requests[1]+" "+requests[2]+" "+requests[3]+" DONE";
+        		if(gameCenter.check(requests[3], requests[2])){
+
+      			  return "ACTION " +requests[1]+" "+requests[2]+" "+requests[3]+" DONE";}
         		
         	}
         	else if (requests[1].equals("BET") && requests.length==5){
-        		if(gameCenter.bet(requests[3], requests[2],Integer.parseInt(requests[4])))
-        			  return "ACTION " +requests[1]+" "+requests[2]+" "+requests[3]+" DONE";
+
+        			  return "ACTION " +requests[1]+" "+requests[2]+" "+requests[3]+" DONE";}
         		
         		
         	}
         	else 
         		  return "ACTION " +requests[1]+" "+requests[2]+" "+requests[3]+" FAILED";
-        }  
+          
 		
 		
         return "ACTION " +requests[1]+" "+requests[2]+" "+requests[3]+" FAILED";
 	}
+	/** 
+	 * @param action is string that has this format: "CHATMSG *GameID* *UserID* *MSG*"
+	 */
+	public void ChatMsg(String action){
+        String[] requests = action.split(" ");
+        if(requests[0].equals("CHATMSG") && requests.length >= 3){
+      	  gameCenter.ChatMsg(requests[1], requests[2],action);
+      		  
+      		  
+      	  
+      	  
+      	  
+        }  
+		
+		
+	}
+
+
 }

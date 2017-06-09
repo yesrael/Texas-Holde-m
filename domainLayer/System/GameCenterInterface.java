@@ -61,6 +61,7 @@ public interface GameCenterInterface {
 		 public boolean fold(String userID, String gameID);
 		 public boolean raise(String userID, String gameID, int money);
 		 public boolean call(String userID, String gameID, int money);
+		public void ChatMsg(String string, String string2, String copyOfRange);
 		 
 		 
 }

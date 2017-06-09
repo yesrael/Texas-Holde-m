@@ -1,5 +1,6 @@
 package user;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import com.sun.istack.internal.logging.Logger;
@@ -23,6 +24,7 @@ public class User implements UserInterface {
 	private String avatar;
 	Logger my_log;
 	private boolean isWaitingForAction;
+	private HashMap<String, Boolean> isWaitingForActionMap;
 	private ConnectionHandler handler;
 
 	public User(String ID, String password, String name, String email, int totalCash, int score, int league,String avatar){
@@ -35,6 +37,7 @@ public class User implements UserInterface {
 		isWaitingForAction=false;
 		status = UserStatus.DISCONNECTED;
 		my_log = Logger.getLogger(User.class);
+		isWaitingForActionMap = new HashMap<String,Boolean>();
 		this.league = league;
 		this.setAvatar(avatar);
 	}
@@ -147,6 +150,11 @@ public class User implements UserInterface {
 		
 	}
 
+	public void SendMSG(String game){
+		
+		this.handler.send(game);
+		
+	}
 	private String GameToString(Game game){
 
 		String result="GameID="+game.getGameID();
@@ -155,14 +163,14 @@ public class User implements UserInterface {
 		for(int i=0;i<players.length;i++){
 			String hand = getCardsPlayer(players, i);
 			
-			result = result+players[i].getUser().getID()+","+ players[i].getUser().getName()+"," +players[i].getUser().getTotalCash()+","+ hand+","+players[i].getUser().getAvatar()+", ";
+			result = result+players[i].getUser().getID()+","+ players[i].getUser().getName()+"," +players[i].getUser().getTotalCash()+","+ hand+","+players[i].getUser().getAvatar()+",";
 		}
 		result = result + "&activePlayers=";
 		 players= game.getActivePlayers();
 		for(int i=0;i<players.length;i++){
 			String hand = getCardsPlayer(players, i);
 			
-			result = result+players[i].getUser().getID()+","+ players[i].getUser().getName()+"," +players[i].getUser().getTotalCash()+","+ hand+","+players[i].getUser().getAvatar()+", ";
+			result = result+players[i].getUser().getID()+","+ players[i].getUser().getName()+"," +players[i].getUser().getTotalCash()+","+ hand+","+players[i].getUser().getAvatar()+",";
 		}
 		result = result + "&blindBit="+game.getBlindBit();
 		result = result + "&CurrentPlayer="+game.getCurrentPlayer().getUser().getID();
@@ -196,11 +204,16 @@ public class User implements UserInterface {
 	@Override
 	public boolean takeAction(String GameID) {
 		if(this.handler!=null&&this.status == UserStatus.CONNECTED){
-		this.isWaitingForAction = true;
+		if(this.isWaitingForActionMap.containsKey(GameID))return false;
+		else{
+			
+			this.isWaitingForActionMap.put(GameID, true);
+		}
 		
 		
 		this.handler.send("TAKEACTION "+GameID);
-		while(this.isWaitingForAction);
+		while(this.isWaitingForActionMap.get(GameID));
+		this.isWaitingForActionMap.remove(GameID);
 		return true;
 	}
 	return false;
@@ -221,9 +234,10 @@ public class User implements UserInterface {
 	}
 
 	@Override
-	public void actionMaked() {
-		this.isWaitingForAction = false;
-		
+	public void actionMaked(String GameID) {
+		if(this.isWaitingForActionMap.containsKey(GameID)){
+		this.isWaitingForActionMap.replace(GameID, false);
+		}
 	}
 	public boolean isWaiting(){
 		

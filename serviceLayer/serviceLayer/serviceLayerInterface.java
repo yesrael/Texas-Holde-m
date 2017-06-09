@@ -13,7 +13,7 @@ public interface serviceLayerInterface {
    /**
     * 
     * @param request is string That has this format: "LOGIN *USER NAME* *PASSWORD*"
-    * @return "LOGIN DONE *USER NAME* *NAME* *CASH* *SCORE* *LEAGUE*" if succeed to login, "LOGIN FAILED" else
+    * @return "LOGIN DONE *USER NAME* *NAME* *CASH* *SCORE* *LEAGUE* *AVATAR*" if succeed to login, "LOGIN FAILED" else
     */
    public String login(String request,ConnectionHandler handler);
 	
@@ -45,10 +45,15 @@ public String editUserName(String request);
  */
 public String editUserEmail(String request);
 
+/**
+ * 
+ * @param request is string that has this format: "EDITUSERAVATAR *USER NAME* *NEW AVATAR*"
+ * @return "EDITUSERAVATAR DONE" if succeed to edit the user password, "EDITUSERAVATAR FAILED" else
+ */
 public String editUserAvatar(String request);
 
 /** 
- * PLAYERS = "*PLAYER USER NAME* "{0,n}
+ * PLAYERS = "*PLAYER USER NAME*,*PLAYER NAME*,*CASH*,*HAND*,*AVATAR* "{0,n}
  * 
  * CARDS = "*CARD NUMBER* *CARD TYPE* "{0,n}
  * 
@@ -116,7 +121,7 @@ public	String listSpectatableGames(String id);
 
 
 /** 
- * PLAYERS = "*PLAYER USER NAME* "{0,n}
+ * PLAYERS = "*PLAYER USER NAME*,*PLAYER NAME*,*CASH*,*HAND*,*AVATAR*, "{0,n}
  * CARDS = "*CARD NUMBER* *CARD TYPE* "{0,n}
  * GAME FULL DETAILS= "GameID=*ID*&players=*PLAYERS*&activePlayers=*PLAYERS*&blindBit=*NUMBER*&CurrentPlayer=*PLAYER USER NAME*&
  * table=*CARDS*&MaxPlayers=*NUMBER*&activePlayersNumber=*NUMBER*&cashOnTheTable=*NUMBER*&CurrentBet=*NUMBER*"
@@ -139,6 +144,15 @@ public	String leaveGame(String request);
  * @return "ACTION *ACTION TYPE* *GAME ID* *USER NAME* DONE" if succeed to make the action,"ACTION *ACTION TYPE* *GAME ID* *USER NAME* FAILED" else
  */
 public	String Action(String action);
-	
+
+/** 
+ * ACTION TYPE = FOLD/BET/CHECK
+ * MONEY = NUMBER/NULL
+ * @param action is string that has this format: "CHATMSG *GameID* *UserID* *MSG*"
+ */
+public void ChatMsg(String action);
+
+
+
 	
 }

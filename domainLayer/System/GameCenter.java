@@ -292,7 +292,16 @@ public class GameCenter implements GameCenterInterface{
 	}
 	
 	public boolean editUserAvatar(String userID, String newAvatar) {
-		//TODO implement edit user avatar
+		if(newAvatar.isEmpty()) {
+			  LOGGER.info("Error: empty AVATAR is invalid");
+			  return false;
+		}
+		for (User usr : users) {
+		     if(usr.getID().equals(userID)) {
+		    	usr.setAvatar(newAvatar);
+		    	return true;
+		     }
+		}
 		return false;
 	}
 
@@ -334,6 +343,7 @@ public class GameCenter implements GameCenterInterface{
 		
 		   Game game = (Game)getGameByID(GameID);
 		   User user = getUser(UserID);
+		   user.actionMaked(GameID);
            return game.leaveGame(user);
 
 	}
@@ -384,6 +394,20 @@ public class GameCenter implements GameCenterInterface{
 		this.users = new ConcurrentLinkedQueue<User>();
 		this.games = new ConcurrentLinkedQueue<Game>();
 		
+	}
+	
+	public void ChatMsg(String GameID, String UserID, String MsgParts){
+		
+		Game currentGame = (Game) getGameByID(GameID);
+		if(currentGame!=null)
+		for(Player p:currentGame.getPlayers()){
+			
+			if(p.getUser().getID().equals(UserID)){
+				currentGame.SendMSG(MsgParts);
+				
+			}
+			
+		}
 	}
 
 }

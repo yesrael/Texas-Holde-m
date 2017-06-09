@@ -24,6 +24,10 @@ public class Spectator {
 		 User.GameUpdated(game);
 		 
 	 }
+	public void SendMSG(String msg) {
+		User.SendMSG(msg);
+		
+	}
 	 
 
 

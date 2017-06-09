@@ -225,7 +225,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		activePlayers.remove(player);
 		activePlayersNumber--;
 		log_game.addLog(user.getName() + "Fold for This round");
-		user.actionMaked();
+		user.actionMaked(this.GameID);
 		return true;}
 		log_game.addLog(user.getName() + "Failed to fold");
 		return false;
@@ -235,7 +235,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		Player player =getPlayerByUser(user);
 		if(player == CurrentPlayer && !isCalled){
 		log_game.addLog(user.getName() + "Checked for This Round");
-		user.actionMaked();
+		user.actionMaked(this.GameID);
 		return true;}
 		else {
 			
@@ -250,7 +250,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		 {cashOnTheTable += money;
 		 log_game.addLog(user.getName() + "Betted for This Round: "+ money);
 		 
-		 user.actionMaked();
+		 user.actionMaked(this.GameID);
 		return true;}
 		log_game.addLog(user.getName() + "Failed To Bet");
 		return false;
@@ -681,7 +681,12 @@ public boolean isJoinAbleGame(UserInterface p){
 		players.forEach(a -> {a.GameUpdated(this);});
 
 	}
-	
+	public void SendMSG(String msg){
+		user_watches.forEach(a -> {a.SendMSG(msg);});
+		
+		players.forEach(a -> {a.SendMSG(msg);});
+
+	}
 	public void run() {
 		try {
 			ExchangeWaitingPlayers();

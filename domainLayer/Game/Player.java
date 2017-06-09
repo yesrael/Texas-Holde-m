@@ -80,5 +80,9 @@ public class Player implements PlayerInterface{
 		return true;}
 		return false;
 	}
+	public void SendMSG(String msg) {
+		User.SendMSG(msg);
+		
+	}
 	
 }
