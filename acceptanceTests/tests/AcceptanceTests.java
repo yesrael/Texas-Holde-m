@@ -156,7 +156,7 @@ public class AcceptanceTests {
 		//non existing user
 		assertEquals(service.createGame("CREATEGAME usr " + prefs), "CREATEGAME FAILED");
 		
-		User senior = new User("sen_user", "123456789", "firstname", "first@mail.com", 1000, 100000, 0);
+		User senior = new User("sen_user", "123456789", "firstname", "first@mail.com", 1000, 100000, 0,"");
 		gameCenter.addUser(senior);
 		//successful create game
 		assertNotEquals(service.createGame("CREATEGAME sen_user " + prefs), "CREATEGAME FAILED");
@@ -177,12 +177,12 @@ public class AcceptanceTests {
 		assertEquals(service.listJoinableGames("*USER_NAME*"), "LISTJOINABLEGAMES FAILED");
 		assertEquals(service.listJoinableGames("LISTJOINABLEGAMES"), "LISTJOINABLEGAMES FAILED");
 		
-		User senior = new User("senior", "123456789", "name2", "name2@mail.com", Integer.MAX_VALUE, 100000, 5);
+		User senior = new User("senior", "123456789", "name2", "name2@mail.com", Integer.MAX_VALUE, 100000, 5,"");
 		gameCenter.addUser(senior);
 		assertEquals(service.listJoinableGames("LISTJOINABLEGAMES senior").split(" ")[1], "DONE");
 		
 		try {
-			User p = new User("ppp", "123456789", "ppp", "ppp@mail.com", 100000, 100000, 5);
+			User p = new User("ppp", "123456789", "ppp", "ppp@mail.com", 100000, 100000, 5,"");
 			gameCenter.addUser(p);
 			gameCenter.createGame("senior", new GamePreferences(GameType.NO_LIMIT, 0, 0, 100, 100, 2, 8, true, true, 5));
 			gameCenter.createGame("senior", new GamePreferences(GameType.NO_LIMIT, 0, 0, 100, 100, 2, 8, true, true, 5));
@@ -197,13 +197,13 @@ public class AcceptanceTests {
 		}
 		assertEquals(c, 3);
 		
-		User noLeague = new User("new", "123456789", "new", "new@mail.com", Integer.MAX_VALUE, 100000, -1);
+		User noLeague = new User("new", "123456789", "new", "new@mail.com", Integer.MAX_VALUE, 100000, -1,"");
 		gameCenter.addUser(noLeague);
 		
 		//new player with league -1
 		assertTrue(service.listJoinableGames("LISTJOINABLEGAMES new").split(" ").length > 3);
 		
-		User poor = new User("poor", "123456789", "poor", "poor@mail.com", 0, 0, 0);
+		User poor = new User("poor", "123456789", "poor", "poor@mail.com", 0, 0, 0,"");
 		gameCenter.addUser(poor);
 		
 		assertEquals(service.listJoinableGames("LISTJOINABLEGAMES poor"), "LISTJOINABLEGAMES DONE ");
@@ -217,7 +217,7 @@ public class AcceptanceTests {
 		assertEquals(service.searchGamesByPrefs("*GAME_PREF*"), "SEARCHGAMESBYPREFS FAILED");
 		assertEquals(service.searchGamesByPrefs("SEARCHGAMESBYPREFS"), "SEARCHGAMESBYPREFS FAILED");
 		
-		User senior = new User("sen_user", "123456789", "firstname", "first@mail.com", 1000, 100000, 5);
+		User senior = new User("sen_user", "123456789", "firstname", "first@mail.com", 1000, 100000, 5,"");
 		gameCenter.addUser(senior);
 		try {
 			gameCenter.createGame("sen_user", new GamePreferences(GameType.NO_LIMIT, 0, 0, 10, 0, 2, 8, true, true, 5));
@@ -259,7 +259,7 @@ public class AcceptanceTests {
 		assertEquals(service.searchGamesByPlayerName("*USER_NAME*"), "SEARCHGAMESBYPLAYERNAME FAILED");
 		assertEquals(service.searchGamesByPlayerName("SEARCHGAMESBYPLAYERNAME"), "SEARCHGAMESBYPLAYERNAME FAILED");
 		
-		User senior = new User("sen_user", "123456789", "name1", "first@mail.com", 1000, 100000, 5);
+		User senior = new User("sen_user", "123456789", "name1", "first@mail.com", 1000, 100000, 5,"");
 		gameCenter.addUser(senior);
 		try {
 			gameCenter.createGame("sen_user", new GamePreferences(GameType.NO_LIMIT, 0, 0, 10, 0, 2, 8, true, true, 5));
@@ -287,7 +287,7 @@ public class AcceptanceTests {
 		assertEquals(service.searchGamesByPotSize("*POT_SIZE*"), "SEARCHGAMESBYPOTSIZE FAILED");
 		assertEquals(service.searchGamesByPotSize("SEARCHGAMESBYPOTSIZE"), "SEARCHGAMESBYPOTSIZE FAILED");
 		
-		User senior = new User("sen_user", "123456789", "name1", "first@mail.com", 1000, 100000, 5);
+		User senior = new User("sen_user", "123456789", "name1", "first@mail.com", 1000, 100000, 5,"");
 		gameCenter.addUser(senior);
 		try {
 			gameCenter.createGame("sen_user", new GamePreferences(GameType.NO_LIMIT, 100, 0, 10, 0, 2, 8, true, true, 5));
@@ -309,8 +309,8 @@ public class AcceptanceTests {
 		assertEquals(service.joinGame("JOINGAME *USER_NAME*"), "JOINGAME FAILED BAD INSTRUCTION");
 		assertEquals(service.joinGame("JOINGAME *GAME_ID*"), "JOINGAME FAILED BAD INSTRUCTION");
 		
-		User senior = new User("sen_user", "123456789", "name1", "first@mail.com", 10000, 100000, 1);
-		User newUser = new User("newUser", "123456789", "newUser", "newUser@mail.com", 100, 100000, 1);
+		User senior = new User("sen_user", "123456789", "name1", "first@mail.com", 10000, 100000, 1,"");
+		User newUser = new User("newUser", "123456789", "newUser", "newUser@mail.com", 100, 100000, 1,"");
 		gameCenter.addUser(senior);
 		gameCenter.addUser(newUser);
 		try {

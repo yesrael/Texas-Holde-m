@@ -1,7 +1,6 @@
 package Game;
 
 import java.util.LinkedList;
-import java.util.logging.Logger;
 
 import user.UserInterface;
 import System.GameLogs;
@@ -247,9 +246,10 @@ public boolean isJoinAbleGame(UserInterface p){
 	
 	public boolean bet(UserInterface user, int money) {
 		Player player =getPlayerByUser(user);
-		if(player !=null &&player.getCash() >= money && money>=CurrentBet && player == CurrentPlayer)
+		if(player !=null &&player.getCash() >= money && money>=CurrentBet && player == CurrentPlayer&&player.giveMoney(money))
 		 {cashOnTheTable += money;
 		 log_game.addLog(user.getName() + "Betted for This Round: "+ money);
+		 
 		 user.actionMaked();
 		return true;}
 		log_game.addLog(user.getName() + "Failed To Bet");

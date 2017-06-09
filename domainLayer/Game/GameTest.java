@@ -15,11 +15,11 @@ public class GameTest {
      
 	
     static Game g ;
-    static User p1 = new User("1", "123", "Ahmad", "bazian@post.bgu.ac.il", 5000000, 100, 2);
-    static User p2 =  new User("2", "123", "Ahmad", "bazian@post.bgu.ac.il", 5000000, 100, 2);
-    static User p3 = new User("3", "123", "Ahmad", "bazian@post.bgu.ac.il", 5000000, 100, 2);
-    User playerWithNoCash = new User("4", "123", "Ahmad", "bazian@post.bgu.ac.il", 5, 5, 2);
-    User playerWithNoLeague = new User("3", "123", "Ahmad", "bazian@post.bgu.ac.il", 5000000, 100, 3);
+    static User p1 = new User("1", "123", "Ahmad", "bazian@post.bgu.ac.il", 5000000, 100, 2,"");
+    static User p2 =  new User("2", "123", "Ahmad", "bazian@post.bgu.ac.il", 5000000, 100, 2,"");
+    static User p3 = new User("3", "123", "Ahmad", "bazian@post.bgu.ac.il", 5000000, 100, 2,"");
+    User playerWithNoCash = new User("4", "123", "Ahmad", "bazian@post.bgu.ac.il", 5, 5, 2,"");
+    User playerWithNoLeague = new User("3", "123", "Ahmad", "bazian@post.bgu.ac.il", 5000000, 100, 3,"");
     @BeforeClass
     public static void setUp(){
     	GamePreferences prefs = null;

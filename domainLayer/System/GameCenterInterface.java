@@ -16,7 +16,7 @@ public interface GameCenterInterface {
 	 * 
 	 *this function get all the details of unregistered user, check them under the game policy, if there is'nt problem with one or more of the details make a new user and add him to the system
 	 */
-	   public boolean register(String ID, String password, String name, String email);
+	public boolean register(String ID, String password, String name, String email,String avatar) ;
 	   /**
 		 * login to the system if the user registered
 		 * @param ID

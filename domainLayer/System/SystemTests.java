@@ -14,17 +14,17 @@ public class SystemTests {
 	
 	@Test
 	public void registerTests() {
-		assertTrue(GCI.register("111111111", "12345780", "israel", "bla@bla.com"));
+		assertTrue(GCI.register("111111111", "12345780", "israel", "bla@bla.com",""));
 
-		assertFalse(GCI.register("111111111", "12345678", "isral", "bla@ba.com")); //same user cannot register twice
-		assertFalse(GCI.register("222222222", "1234567", "israel", "bla@bla.com")); //the length of password must be at least 8 characters
-		assertFalse(GCI.register("333333333", "12345678", "israel", "bla@blabla")); //invalid email (there must be '.' in valid address)
+		assertFalse(GCI.register("111111111", "12345678", "isral", "bla@ba.com","")); //same user cannot register twice
+		assertFalse(GCI.register("222222222", "1234567", "israel", "bla@bla.com","")); //the length of password must be at least 8 characters
+		assertFalse(GCI.register("333333333", "12345678", "israel", "bla@blabla","")); //invalid email (there must be '.' in valid address)
 	
 	}
 	
 	@Test
 	public void loginTests() {
-		GCI.register("222222222", "12345678", "israel", "bla@bla.com");
+		GCI.register("222222222", "12345678", "israel", "bla@bla.com","");
 		assertTrue(GCI.login("222222222", "12345678",null));
 		
 		assertEquals(GCI.getUser("222222222").getStatus(), UserStatus.CONNECTED); //check that the user in connected status after login
@@ -34,7 +34,7 @@ public class SystemTests {
 	
 	@Test
 	public void logoutTests() {
-		GCI.register("333", "12345678", "israel", "bla@bla.com");
+		GCI.register("333", "12345678", "israel", "bla@bla.com","");
 		GCI.login("333", "12345678",null);
 		
 		assertNotEquals(GCI.getUser("333").getStatus(), UserStatus.DISCONNECTED); //the user connected now
@@ -46,7 +46,7 @@ public class SystemTests {
 	
 	@Test
 	public void editUserPasswordTest() {
-		GCI.register("444", "12345678", "israel", "bla@bla.com");
+		GCI.register("444", "12345678", "israel", "bla@bla.com","");
 		
 		assertEquals(GCI.getUser("444").getPassword(), "12345678"); //the user's password match
 		GCI.editUserPassword("444", "12345678", "12123434");
@@ -59,7 +59,7 @@ public class SystemTests {
 	
 	@Test
 	public void editUserEmailTest() {
-		GCI.register("666", "12345678", "israel", "bla@bla.com");
+		GCI.register("666", "12345678", "israel", "bla@bla.com","");
 		
 		assertEquals(GCI.getUser("666").getEmail(), "bla@bla.com"); //the user's email match
 		GCI.editUserEmail("666", "yesrael@gmail.com");

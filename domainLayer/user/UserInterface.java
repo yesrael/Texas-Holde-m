@@ -57,8 +57,12 @@ public interface UserInterface {
 
 
 
-	public boolean giveMoney(int money) ;
 
 	public void giveHandler(ConnectionHandler handler);
 	public void actionMaked();
+
+	boolean changeMoney(int money);
+	public String getAvatar();
+
+	public void setAvatar(String avatar) ;
 }

@@ -2,6 +2,7 @@ package serviceLayer;
 
 import java.util.LinkedList;
 
+import Game.Card;
 import Game.Game;
 import Game.GamePreferences;
 import Game.Player;
@@ -28,9 +29,9 @@ public class serviceLayer implements serviceLayerInterface {
 	@Override
 	public String register(String request) {
          String[] requests = request.split(" ");
-          if(requests[0].equals("REG") && requests.length == 5){
+          if(requests[0].equals("REG") && requests.length == 6){
         	  
-        	  if(gameCenter.register(requests[1], requests[2], requests[3], requests[4])){
+        	  if(gameCenter.register(requests[1], requests[2], requests[3], requests[4],requests[5])){
         		  
         		  return "REG DONE";
         		  
@@ -341,19 +342,34 @@ public class serviceLayer implements serviceLayerInterface {
 		return "JOINGAME FAILED BAD INSTRUCTION";
 	}
 	
-	
+	private String getCardsPlayer(Player[] players, int i) {
+		String hand =""; 
+		Card[]	PlayerCards=	players[i].getCards();
+		if(PlayerCards[0]!=null&&PlayerCards[1]!=null){
+			hand +=PlayerCards[0].getType()+","+PlayerCards[0].getNumber()+",";
+			hand+=PlayerCards[1].getType()+","+PlayerCards[1].getNumber();
+		}
+		else{
+			hand+="NULL,NULL,NULL,NULL";
+		}
+		return hand;
+	}
 	private String GameToString(Game game){
 
 		String result="GameID="+game.getGameID();
 		result= result+"&players=";
 		Player[] players= game.getPlayers();
 		for(int i=0;i<players.length;i++){
-			result = result+players[i].getUser().getID()+","+ players[i].getUser().getName()+",";
+			String hand = getCardsPlayer(players, i);
+			result = result+players[i].getUser().getID()+","+ players[i].getUser().getName()+"," +players[i].getUser().getTotalCash()+","+ hand+","+players[i].getUser().getAvatar()+", ";
+
 		}
 		result = result + "&activePlayers=";
 		 players= game.getActivePlayers();
 		for(int i=0;i<players.length;i++){
-			result = result+players[i].getUser().getID()+","+ players[i].getUser().getName()+",";
+			String hand = getCardsPlayer(players, i);
+			result = result+players[i].getUser().getID()+","+ players[i].getUser().getName()+"," +players[i].getUser().getTotalCash()+","+ hand+","+players[i].getUser().getAvatar()+", ";
+
 		}
 		result = result + "&blindBit="+game.getBlindBit();
 		result = result + "&CurrentPlayer="+ (game.getCurrentPlayer() != null ? game.getCurrentPlayer().getUser().getID() : "");

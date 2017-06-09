@@ -5,7 +5,7 @@ import communicationLayer.ConnectionHandler;
 public interface serviceLayerInterface {
 /**
  * 	
- * @param request is string That has this format: "REG *USER NAME* *PASSWORD* *NAME* *EMAIL*"
+ * @param request is string That has this format: "REG *USER NAME* *PASSWORD* *NAME* *EMAIL* *AVATAR*"
  * @return "REG DONE" if the registration done, "REG FAILED" else
  */
    public	String register(String request);
