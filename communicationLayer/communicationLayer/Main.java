@@ -2,11 +2,14 @@ package communicationLayer;
 
 import java.io.IOException;
 
+import Game.Enum.CardType;
+
 
 
 
 public class Main {
 	public static void main(String[] args) throws IOException {
+		System.out.println(CardType.CLUBS);
 		runThreadPerClient(args);
 	
 

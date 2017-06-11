@@ -61,7 +61,7 @@ public class GameCenter implements GameCenterInterface{
    * this function get all the details of unregistered user, check them under the game policy, if there is'nt problem with one or more of the details make a new user and add him to the system
    *  @return true if the user can register to the system, else return false;
    */
-   public boolean register(String ID, String password, String name, String email) 
+   public boolean register(String ID, String password, String name, String email,String avatar) 
    {
 	   User newUser;
 
@@ -81,7 +81,7 @@ public class GameCenter implements GameCenterInterface{
 		     LOGGER.info("Error: the password is too short");
 		     return false;
 		   }
-	   newUser=new User(ID, password, name, email, 0, 0,-1);
+	   newUser=new User(ID, password, name, email, 5000, 0,-1,avatar);
 	   addUser(newUser);
 	   return true;
    }
@@ -292,7 +292,16 @@ public class GameCenter implements GameCenterInterface{
 	}
 	
 	public boolean editUserAvatar(String userID, String newAvatar) {
-		//TODO implement edit user avatar
+		if(newAvatar.isEmpty()) {
+			  LOGGER.info("Error: empty AVATAR is invalid");
+			  return false;
+		}
+		for (User usr : users) {
+		     if(usr.getID().equals(userID)) {
+		    	usr.setAvatar(newAvatar);
+		    	return true;
+		     }
+		}
 		return false;
 	}
 
@@ -334,6 +343,7 @@ public class GameCenter implements GameCenterInterface{
 		
 		   Game game = (Game)getGameByID(GameID);
 		   User user = getUser(UserID);
+		   user.actionMaked(GameID);
            return game.leaveGame(user);
 
 	}
@@ -384,6 +394,20 @@ public class GameCenter implements GameCenterInterface{
 		this.users = new ConcurrentLinkedQueue<User>();
 		this.games = new ConcurrentLinkedQueue<Game>();
 		
+	}
+	
+	public void ChatMsg(String GameID, String UserID, String MsgParts){
+		
+		Game currentGame = (Game) getGameByID(GameID);
+		if(currentGame!=null)
+		for(Player p:currentGame.getPlayers()){
+			
+			if(p.getUser().getID().equals(UserID)){
+				currentGame.SendMSG(MsgParts);
+				
+			}
+			
+		}
 	}
 
 }

@@ -57,7 +57,7 @@ public class Player implements PlayerInterface{
 	  */
 	 public boolean giveMoney(int money){
 		 cash += money;
-		 return User.giveMoney(money);
+		 return User.changeMoney(money);
 	 }
 
 	
@@ -74,8 +74,15 @@ public class Player implements PlayerInterface{
 	public boolean takeMoney(int money) {
 		if(money > cash) 
 		return false;
-		cash -=money;
-		return true;
+		if(this.User.changeMoney(-money))
+		{ cash -=money;
+		
+		return true;}
+		return false;
+	}
+	public void SendMSG(String msg) {
+		User.SendMSG(msg);
+		
 	}
 	
 }
