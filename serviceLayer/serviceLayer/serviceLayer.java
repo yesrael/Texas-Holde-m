@@ -366,11 +366,11 @@ public class serviceLayer implements serviceLayerInterface {
 		String hand =""; 
 		Card[]	PlayerCards=	players[i].getCards();
 		if(PlayerCards[0]!=null&&PlayerCards[1]!=null){
-			hand +=PlayerCards[0].getType()+","+PlayerCards[0].getNumber()+",";
-			hand+=PlayerCards[1].getType()+","+PlayerCards[1].getNumber();
+			hand +=PlayerCards[0].getType()+" "+PlayerCards[0].getNumber()+",";
+			hand+=PlayerCards[1].getType()+" "+PlayerCards[1].getNumber();
 		}
 		else{
-			hand+="NULL,NULL,NULL,NULL";
+			hand+="NULL NULL NULL NULL";
 		}
 		return hand;
 	}
@@ -402,6 +402,7 @@ public class serviceLayer implements serviceLayerInterface {
 		}
 		result = result + "&MaxPlayers="+game.getpreferences().getMaxPlayersNum();
 		result = result + "&cashOnTheTable="+game.getCashOnTheTable();
+		result = result + "&CurrentBet="+game.getCurrentBet();
 		return result;
 	}
 
