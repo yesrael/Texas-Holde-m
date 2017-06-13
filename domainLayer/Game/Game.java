@@ -98,7 +98,7 @@ public class Game implements GameInterface, Runnable{
 	}
 
 	
-	public boolean spectate(UserInterface p){
+	public synchronized boolean spectate(UserInterface p){
 		if(preferences.isSpectatable()){
 		log_game.addLog(p.getName() + " Watching the Game");
 		
@@ -114,7 +114,7 @@ public class Game implements GameInterface, Runnable{
 	 * @param player this player will be holded by the relevant user 
 	 * @return true if this player can join the Game, else (there's more than MaxPlayers activePlayers, or his cash not enough) return false
 	 */
-	public boolean joinGame(UserInterface p){
+	public synchronized boolean joinGame(UserInterface p){
 		for(Player ppp: players)
 		{
 			if(ppp.getUser().getID().equals(p.getID())){
@@ -192,13 +192,13 @@ public boolean isJoinAbleGame(UserInterface p){
 		}
 		else
 		if(players.size() < preferences.getMaxPlayersNum()) {
-			synchronized (this) {
+			
 				if(players.size() < preferences.getMaxPlayersNum()) {
 
 					return true;
 				}
 				else return false;
-			}
+			
 		}
 		else //The game is full and there are enough activePlayers waiting to join.
 			return false;
@@ -218,7 +218,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		
 	}
 	
-	public boolean fold(UserInterface user) {
+	public synchronized boolean fold(UserInterface user) {
 		Player player =getPlayerByUser(user);
 		
 		if(player == CurrentPlayer){
@@ -231,7 +231,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		return false;
 	}
 	
-	public boolean check(UserInterface user) {
+	public synchronized boolean check(UserInterface user) {
 		Player player =getPlayerByUser(user);
 		if(player == CurrentPlayer && !isCalled){
 		log_game.addLog(user.getName() + "Checked for This Round");
@@ -244,7 +244,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		}
 	}
 	
-	public boolean bet(UserInterface user, int money) {
+	public synchronized boolean bet(UserInterface user, int money) {
 		Player player =getPlayerByUser(user);
 		if(player !=null &&player.getCash() >= money && money>=CurrentBet && player == CurrentPlayer&&player.giveMoney(money))
 		 {cashOnTheTable += money;
@@ -256,7 +256,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		return false;
 	}
 	
-	public boolean leaveGame(UserInterface user) {
+	public synchronized boolean leaveGame(UserInterface user) {
 		Player player =getPlayerByUser(user);
 		synchronized (this) {
 			boolean found =  players.remove(player);
@@ -273,7 +273,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		}
 	}
 
-	public boolean dealCardsForPlayers() {
+	public synchronized boolean dealCardsForPlayers() {
 		for(int i=0;i < activePlayers.size(); i++ ){
 			Card card1 = deck.getCard();
 			Card card2 = deck.getCard();
@@ -286,7 +286,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		return true;
 	}
 	
-	public boolean dealCardsForTable(int number){
+	public synchronized boolean dealCardsForTable(int number){
 		
 		if(number + cardsOnTable > 5) return false;
 		
@@ -675,7 +675,7 @@ public boolean isJoinAbleGame(UserInterface p){
 	}
 
 	
-	private void GameUpated(){
+	private synchronized void GameUpated(){
 		user_watches.forEach(a -> {a.GameUpdated(this);});
 		
 		players.forEach(a -> {a.GameUpdated(this);});
@@ -707,8 +707,10 @@ public boolean isJoinAbleGame(UserInterface p){
 					
 				}
 			}
+			GameUpated();
 		}
 		catch(Exception e) {
+			GameUpated();
 			System.out.println("Game " + GameID + " has crashed!");
 			e.printStackTrace();
 		}

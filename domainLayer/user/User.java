@@ -173,7 +173,9 @@ public class User implements UserInterface {
 			result = result+players[i].getUser().getID()+","+ players[i].getUser().getName()+"," +players[i].getUser().getTotalCash()+","+ hand+","+players[i].getUser().getAvatar()+",";
 		}
 		result = result + "&blindBit="+game.getBlindBit();
-		result = result + "&CurrentPlayer="+game.getCurrentPlayer().getUser().getID();
+		if(game.getCurrentPlayer()!=null) result = result+"&CurrentPlayer="+game.getCurrentPlayer().getUser().getID();
+		else result = result+"&CurrentPlayer=";
+		//result = result + game.getCurrentPlayer()!=null ? "&CurrentPlayer="+game.getCurrentPlayer().getUser().getID(): "&CurrentPlayer=";
 		result = result + "&table=";
 		
 		for(int i=0;i<game.getCardsOnTable();i++){
@@ -183,6 +185,7 @@ public class User implements UserInterface {
 		}
 		result = result + "&MaxPlayers="+game.getpreferences().getMaxPlayersNum();
 		result = result + "&cashOnTheTable="+game.getCashOnTheTable();
+		result = result + "&CurrentBet="+game.getCurrentBet();
 		return result;
 	}
 
@@ -190,11 +193,11 @@ public class User implements UserInterface {
 		String hand =""; 
 		Card[]	PlayerCards=	players[i].getCards();
 		if(PlayerCards[0]!=null&&PlayerCards[1]!=null){
-			hand +=PlayerCards[0].getType()+","+PlayerCards[0].getNumber()+",";
-			hand+=PlayerCards[1].getType()+","+PlayerCards[1].getNumber();
+			hand +=PlayerCards[0].getType()+" "+PlayerCards[0].getNumber()+" ";
+			hand+=PlayerCards[1].getType()+" "+PlayerCards[1].getNumber();
 		}
 		else{
-			hand+="NULL,NULL,NULL,NULL";
+			hand+="NULL NULL NULL NULL";
 		}
 		return hand;
 	}

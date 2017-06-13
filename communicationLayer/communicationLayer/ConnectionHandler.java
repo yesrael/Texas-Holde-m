@@ -49,6 +49,7 @@ private void close() {
 	} catch (IOException e) {
 		System.out.println("Exception in closing I/O");
 	}
+	
 }
 public void run() {
 
@@ -97,6 +98,7 @@ public void process() throws IOException {
 	
 public void send(String msg){
 	synchronized (this) {
+		System.out.println("SENDING: "+msg);
 	    if(msg!=null) out.println(msg);
 }}
 

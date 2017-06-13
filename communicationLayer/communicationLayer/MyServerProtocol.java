@@ -127,7 +127,7 @@ public class MyServerProtocol implements ServerProtocol<String>{
 	        }
 		}
 		else if(parts[0].equals("JOINGAME")){
-	        if(this.name!=null&&parts[1].equals(name)){
+	        if(this.name!=null&&parts[2].equals(name)){
 	        	callback.sendMessage(serviceLayerr.joinGame(msg));
 			
 	        }
