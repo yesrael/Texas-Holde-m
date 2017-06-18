@@ -81,10 +81,12 @@ public void process() throws IOException {
 		System.out.println("Received \"" + msg + "\" from client");
 		
 	 protocol.processMessage(msg,resp->{
-		 synchronized (this) {
+           synchronized (protocol) {
+			
+		
 		 if(resp!=null) out.println(resp);
-		 System.out.println("SENDING: "+resp);
-		 } 
+		 System.out.println("SENDING: "+resp);}
+		 
 	 },this);
 		
 		
@@ -95,11 +97,13 @@ public void process() throws IOException {
 
 	}
 
-	
+int counter = 0;	
 public void send(String msg){
-	synchronized (this) {
-		System.out.println("SENDING: "+msg);
-	    if(msg!=null) out.println(msg);
-}}
+	synchronized(out){
+         counter++;
+
+		System.out.println("SENDING +"+counter+" : "+msg);
+	    if(msg!=null) out.println(msg);}
+}
 
 }

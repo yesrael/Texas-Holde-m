@@ -1,8 +1,6 @@
 package user;
 
 import java.util.LinkedList;
-
-import Game.Game;
 import Game.GameInterface;
 import communicationLayer.ConnectionHandler;
 

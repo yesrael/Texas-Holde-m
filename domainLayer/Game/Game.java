@@ -144,7 +144,7 @@ public class Game implements GameInterface, Runnable{
 		}
 		
 		if(players.size() < preferences.getMaxPlayersNum()) {
-			synchronized (this) {
+		
 				if(players.size() < preferences.getMaxPlayersNum()) {
 
 					players.add(player);
@@ -153,7 +153,7 @@ public class Game implements GameInterface, Runnable{
 					return true;
 				}
 				else return false;
-			}
+			
 		}
 		else //The game is full and there are enough activePlayers waiting to join.
 			return false;
@@ -244,7 +244,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		}
 	}
 	
-	public synchronized boolean bet(UserInterface user, int money) {
+	public  boolean bet(UserInterface user, int money) {
 		Player player =getPlayerByUser(user);
 		if(player !=null &&player.getCash() >= money && money>=CurrentBet && player == CurrentPlayer&&player.giveMoney(money))
 		 {cashOnTheTable += money;
@@ -256,9 +256,8 @@ public boolean isJoinAbleGame(UserInterface p){
 		return false;
 	}
 	
-	public synchronized boolean leaveGame(UserInterface user) {
+	public boolean leaveGame(UserInterface user) {
 		Player player =getPlayerByUser(user);
-		synchronized (this) {
 			boolean found =  players.remove(player);
 			
 			if(activePlayers.contains(player)) {
@@ -270,7 +269,7 @@ public boolean isJoinAbleGame(UserInterface p){
 				activePlayers.removeFirstOccurrence(player);
 			}
 			return found;
-		}
+		
 	}
 
 	public synchronized boolean dealCardsForPlayers() {
@@ -286,7 +285,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		return true;
 	}
 	
-	public synchronized boolean dealCardsForTable(int number){
+	public  boolean dealCardsForTable(int number){
 		
 		if(number + cardsOnTable > 5) return false;
 		
@@ -312,7 +311,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		this.cashOnTheTable = cashOnTheTable;
 	}
 
-	public Player[] checkWinner(){
+	public synchronized Player[] checkWinner(){
 		Player [] result = null;
 		 
 		if(activePlayers.size() == 1) {
@@ -690,10 +689,12 @@ public boolean isJoinAbleGame(UserInterface p){
 	public void run() {
 		try {
 			ExchangeWaitingPlayers();
+			GameUpated();
 			while(activePlayersNumber > 0){
 				
 				ExchangeWaitingPlayers();
 				GameUpated();
+				while(activePlayersNumber==1) ExchangeWaitingPlayers();
 				while (activePlayersNumber > 1){
 					ExchangeWaitingPlayers();
 					GameUpated();
@@ -746,7 +747,7 @@ public boolean isJoinAbleGame(UserInterface p){
 	}
 
 
-	public void ExchangeWaitingPlayers() {
+	public synchronized void ExchangeWaitingPlayers() {
 		activePlayers = new LinkedList<Player>();
 		activePlayersNumber = 0;
 		for(Player ppp:players){
