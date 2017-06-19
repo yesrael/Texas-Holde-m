@@ -120,15 +120,11 @@ public class Game implements GameInterface, Runnable{
 			if(ppp.getUser().getID().equals(p.getID())){
 				log_game.addLog(p.getName() + "failed to joing this Game because he is there");
 				return false;}
-			
-			
 		}
 
 		Player player;
 		if(preferences.getChipPolicy() == 0){
-			player = new Player(p.getTotalCash(), p);
-			
-			
+			player = new Player(p.getTotalCash(), p);	
 		}
 		else{
 			if(preferences.getChipPolicy() > p.getTotalCash())
@@ -144,7 +140,6 @@ public class Game implements GameInterface, Runnable{
 		}
 		
 		if(players.size() < preferences.getMaxPlayersNum()) {
-		
 				if(players.size() < preferences.getMaxPlayersNum()) {
 
 					players.add(player);
@@ -153,7 +148,6 @@ public class Game implements GameInterface, Runnable{
 					return true;
 				}
 				else return false;
-			
 		}
 		else //The game is full and there are enough activePlayers waiting to join.
 			return false;
@@ -246,7 +240,7 @@ public boolean isJoinAbleGame(UserInterface p){
 	
 	public  boolean bet(UserInterface user, int money) {
 		Player player =getPlayerByUser(user);
-		if(player !=null &&player.getCash() >= money && money>=CurrentBet && player == CurrentPlayer&&player.giveMoney(money))
+		if(player !=null &&player.getCash() >= money && money>=CurrentBet && player == CurrentPlayer&&player.takeMoney(money))
 		 {cashOnTheTable += money;
 		 log_game.addLog(user.getName() + "Betted for This Round: "+ money);
 		 
@@ -256,7 +250,7 @@ public boolean isJoinAbleGame(UserInterface p){
 		return false;
 	}
 	
-	public boolean leaveGame(UserInterface user) {
+	public synchronized boolean leaveGame(UserInterface user) {
 		Player player =getPlayerByUser(user);
 			boolean found =  players.remove(player);
 			
@@ -267,6 +261,7 @@ public boolean isJoinAbleGame(UserInterface p){
 				log_game.addLog(player.getUser().getName() + "Left The Game");
 				activePlayersNumber--;
 				activePlayers.removeFirstOccurrence(player);
+			
 			}
 			return found;
 		
@@ -736,7 +731,9 @@ public boolean isJoinAbleGame(UserInterface p){
 		table = new Card[5];
 		cardsOnTable = 0;
 		activePlayers.get(blindBit).takeMoney(preferences.getMinBet() / 2);
+		cashOnTheTable+=preferences.getMinBet() / 2;
 		activePlayers.get(((blindBit + 1) % activePlayersNumber)).takeMoney(preferences.getMinBet());
+		cashOnTheTable+=preferences.getMinBet();
 		blindBit = (blindBit+1) % activePlayersNumber;
 		dealCardsForPlayers();
 		log_game.addLog("Cards Dealed For the Players, And BlinBet Was Betted And The Game Starting");
@@ -775,8 +772,10 @@ public boolean isJoinAbleGame(UserInterface p){
 			if(RoundNumber == 0) CurrentBet = preferences.getMinBet(); 
 			while(played < activePlayersNumber) {
 				Player current = activePlayers.get((blindBit + currentPlayer) % activePlayersNumber);
+				
 				int prevCashOnTheTable = cashOnTheTable;
 				CurrentPlayer = current;
+				GameUpated();
 					if(!current.takeAction(this.GameID)){
 						leaveGame(current.getUser());
 					}
@@ -797,6 +796,7 @@ public boolean isJoinAbleGame(UserInterface p){
 				else if(RoundNumber != 3) dealCardsForTable(1);
 				GameUpated();
 				log_game.addLog("Round number: "+ RoundNumber + " Ended");
+				RoundNumber++;
 			}
 		
 		GameUpated();
