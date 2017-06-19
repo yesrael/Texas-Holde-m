@@ -470,7 +470,7 @@ public class serviceLayer implements serviceLayerInterface {
         		
         	}
         	else if (requests[1].equals("BET") && requests.length==5){
-
+        		if(gameCenter.bet(requests[3], requests[2],Integer.parseInt(requests[4])))
         			  return "ACTION " +requests[1]+" "+requests[2]+" "+requests[3]+" DONE";}
         		
         		
