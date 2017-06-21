@@ -171,6 +171,9 @@ public class MyServerProtocol implements ServerProtocol<String>{
 	        	callback.sendMessage("ACTION FAILED USER NOT LOGGED IN");
 	        }
 		}
+		else if(parts[0].equals("CHATMSG")){
+	        	serviceLayerr.ChatMsg(msg);
+		}
 		else
 			
 				callback.sendMessage("SYSMSG UNIDENTIFIED");

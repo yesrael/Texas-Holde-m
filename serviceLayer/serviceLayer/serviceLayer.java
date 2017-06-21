@@ -362,7 +362,7 @@ public class serviceLayer implements serviceLayerInterface {
 		String hand =""; 
 		Card[]	PlayerCards=	players[i].getCards();
 		if(PlayerCards[0]!=null&&PlayerCards[1]!=null){
-			hand +=PlayerCards[0].getType()+" "+PlayerCards[0].getNumber()+",";
+			hand +=PlayerCards[0].getType()+" "+PlayerCards[0].getNumber()+" ";
 			hand+=PlayerCards[1].getType()+" "+PlayerCards[1].getNumber();
 		}
 		else{
