@@ -792,12 +792,15 @@ public boolean isJoinAbleGame(UserInterface p){
 			while(played < activePlayersNumber) {
 				Player current = activePlayers.get((blindBit + currentPlayer) % activePlayersNumber);
 				int minumumBet = CurrentBet - this.playerToBet.get(current) > 0 ? CurrentBet - this.playerToBet.get(current) : 0;
+				int minBet=minumumBet;
+				if(minBet==0);
+				   minBet=this.preferences.getMinBet();
 				
 				int prevCashOnTheTable = cashOnTheTable;
 				CurrentPlayer = current;
 				GameUpated();
 				if(RoundNumber != 0 && CurrentBet>0 && minumumBet == 0)break; 
-					if(!current.takeAction(this.GameID,minumumBet)){
+					if(!current.takeAction(this.GameID,minBet)){
 						leaveGame(current.getUser());
 					}
 					else if (cashOnTheTable > prevCashOnTheTable + minumumBet) {
