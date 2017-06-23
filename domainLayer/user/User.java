@@ -205,7 +205,7 @@ public class User implements UserInterface {
 	 * this function sends TAKEACTION request to the client to make some action "TAKEACTION *GAME ID*"
 	 */
 	@Override
-	public boolean takeAction(String GameID) {
+	public boolean takeAction(String GameID,int minBit) {
 		if(this.handler!=null&&this.status == UserStatus.CONNECTED){
 		if(this.isWaitingForActionMap.containsKey(GameID))return false;
 		else{
@@ -214,7 +214,7 @@ public class User implements UserInterface {
 		}
 		
 		
-		this.handler.send("TAKEACTION "+GameID);
+		this.handler.send("TAKEACTION "+GameID+" "+minBit);
 		while(this.isWaitingForActionMap.get(GameID));
 		this.isWaitingForActionMap.remove(GameID);
 		return true;

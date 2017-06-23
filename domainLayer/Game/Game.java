@@ -1,5 +1,7 @@
 package Game;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import user.UserInterface;
@@ -17,7 +19,7 @@ public class Game implements GameInterface, Runnable{
 	private LinkedList<Player> activePlayers;
 	private LinkedList<Player> players;
 	private Player CurrentPlayer;
-	
+	private HashMap<Player,Integer> playerToBet;
 	public Player getCurrentPlayer() {
 		return CurrentPlayer;
 	}
@@ -60,6 +62,7 @@ public class Game implements GameInterface, Runnable{
 		table = new Card[5];
 		cardsOnTable = 0;
 		blindBit = 0;
+		playerToBet = new HashMap<Player,Integer>();
 	}
 	
 	public int getPlayerNumber(){
@@ -227,7 +230,7 @@ public boolean isJoinAbleGame(UserInterface p){
 	
 	public synchronized boolean check(UserInterface user) {
 		Player player =getPlayerByUser(user);
-		if(player == CurrentPlayer && !isCalled){
+		if(player == CurrentPlayer && !isCalled && this.playerToBet.get(player) >= this.CurrentBet){
 		log_game.addLog(user.getName() + "Checked for This Round");
 		user.actionMaked(this.GameID);
 		return true;}
@@ -240,10 +243,15 @@ public boolean isJoinAbleGame(UserInterface p){
 	
 	public  boolean bet(UserInterface user, int money) {
 		Player player =getPlayerByUser(user);
-		if(player !=null &&player.getCash() >= money && money>=CurrentBet && player == CurrentPlayer&&player.takeMoney(money))
+		if(player !=null &&player.getCash() >= money && money>=CurrentBet - this.playerToBet.get(player) && player == CurrentPlayer&&player.takeMoney(money))
 		 {cashOnTheTable += money;
 		 log_game.addLog(user.getName() + "Betted for This Round: "+ money);
-		 
+		 if(this.playerToBet.containsKey(player)){
+			 playerToBet.replace(player, playerToBet.get(player) + money);
+		 }
+		 else{
+			 playerToBet.put(player, money);
+		 }
 		 user.actionMaked(this.GameID);
 		return true;}
 		log_game.addLog(user.getName() + "Failed To Bet");
@@ -720,23 +728,34 @@ public boolean isJoinAbleGame(UserInterface p){
 			winners[i].giveMoney(cashOnTheTable / winners.length);
 		}
 		log_game.addLog("Every Winner Got: "+(cashOnTheTable/winners.length));
+		this.cashOnTheTable = 0;
 		}
 		
 	}
 
 	private void initTableForNewTurn() {
+		reinitPlayersBet();
 		deck = new Deck();
 		deck.shuffle();
 		cashOnTheTable = 0;
 		table = new Card[5];
 		cardsOnTable = 0;
 		activePlayers.get(blindBit).takeMoney(preferences.getMinBet() / 2);
+		this.playerToBet.replace(activePlayers.get(blindBit), preferences.getMinBet() / 2);
 		cashOnTheTable+=preferences.getMinBet() / 2;
 		activePlayers.get(((blindBit + 1) % activePlayersNumber)).takeMoney(preferences.getMinBet());
+		this.playerToBet.replace(activePlayers.get(((blindBit + 1) % activePlayersNumber)), preferences.getMinBet());
 		cashOnTheTable+=preferences.getMinBet();
 		blindBit = (blindBit+1) % activePlayersNumber;
 		dealCardsForPlayers();
 		log_game.addLog("Cards Dealed For the Players, And BlinBet Was Betted And The Game Starting");
+	}
+
+	private void reinitPlayersBet() {
+		this.playerToBet = new HashMap<Player,Integer>();
+		for(Player p : this.activePlayers){
+			this.playerToBet.put(p, 0);
+		}
 	}
 
 	public int getCardsOnTable() {
@@ -772,16 +791,18 @@ public boolean isJoinAbleGame(UserInterface p){
 			if(RoundNumber == 0) CurrentBet = preferences.getMinBet(); 
 			while(played < activePlayersNumber) {
 				Player current = activePlayers.get((blindBit + currentPlayer) % activePlayersNumber);
+				int minumumBet = CurrentBet - this.playerToBet.get(current) > 0 ? CurrentBet - this.playerToBet.get(current) : 0;
 				
 				int prevCashOnTheTable = cashOnTheTable;
 				CurrentPlayer = current;
 				GameUpated();
-					if(!current.takeAction(this.GameID)){
+				if(RoundNumber != 0 && CurrentBet>0 && minumumBet == 0)break; 
+					if(!current.takeAction(this.GameID,minumumBet)){
 						leaveGame(current.getUser());
 					}
-					else if (cashOnTheTable > prevCashOnTheTable + CurrentBet) {
+					else if (cashOnTheTable > prevCashOnTheTable + minumumBet) {
 						played = 1; 
-						CurrentBet=cashOnTheTable - prevCashOnTheTable;
+						CurrentBet+=(cashOnTheTable - prevCashOnTheTable) - minumumBet;
 						isCalled = true;
 					}
 					else played++;
@@ -795,6 +816,7 @@ public boolean isJoinAbleGame(UserInterface p){
 				if(RoundNumber == 0) dealCardsForTable(3);
 				else if(RoundNumber != 3) dealCardsForTable(1);
 				GameUpated();
+				reinitPlayersBet();
 				log_game.addLog("Round number: "+ RoundNumber + " Ended");
 				RoundNumber++;
 			}

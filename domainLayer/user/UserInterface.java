@@ -52,7 +52,7 @@ public interface UserInterface {
 	public void GameUpdated(GameInterface game) ;
 
 
-	public boolean takeAction(String GameID);
+	public boolean takeAction(String GameID, int minBet);
 
 
 
@@ -68,4 +68,5 @@ public interface UserInterface {
 	void actionMaked(String GameID);
 
 	public void SendMSG(String msg);
+
 }
