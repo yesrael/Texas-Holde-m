@@ -18,7 +18,7 @@ public interface PlayerInterface {
 	  * This method will be used by the Game to tell the player that now is his turn, and request him to play, The player object request from the User to play
 	  * @return true if the action was performed , else return false
 	  */
-	 public boolean takeAction(String GameID);
+	 public boolean takeAction(String GameID, int minBet);
 	 
 	 /**
 	  * This method will be used by the Game to give the player money that he win, The player object notify the User about this
