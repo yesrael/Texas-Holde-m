@@ -174,6 +174,9 @@ public class MyServerProtocol implements ServerProtocol<String>{
 		else if(parts[0].equals("CHATMSG")){
 	        	serviceLayerr.ChatMsg(msg);
 		}
+		else if(parts[0].equals("WHISPERMSG")){
+        	serviceLayerr.WhisperMsg(msg);
+	   }
 		else
 			
 				callback.sendMessage("SYSMSG UNIDENTIFIED");

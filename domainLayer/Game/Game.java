@@ -331,48 +331,47 @@ public boolean isJoinAbleGame(UserInterface p){
 			result = FourOfAKind();
 			if(result!= null && result.length !=0)
 			{
-				System.out.println("************************************FourOfAKind**********************************");
+				log_game.addLog("The Winners In This Round: "+ result.toString()+ " with FourOfAKind"); 
 				return result;
 			}
 			result = FullHouse();
 			if(result!= null && result.length !=0)
 			{
-				System.out.println("************************************FullHouse**********************************");
+				log_game.addLog("The Winners In This Round: "+ result.toString()+ " with FullHouse"); 
 				return result;
 			}
 			result = Flush();
 			if(result!= null && result.length !=0)
 			{
-				System.out.println("************************************Flush**********************************");
+				log_game.addLog("The Winners In This Round: "+ result.toString()+ " with Flush"); 
 				return result;
 			}
 			result = Straight();
 			if(result!= null && result.length !=0)
 			{
-				System.out.println("************************************Straight**********************************");
+				log_game.addLog("The Winners In This Round: "+ result.toString()+ " with Straight"); 
 				return result;
 			}
 			result = ThreeOFKind();
 			if(result!= null && result.length !=0)
 			{
-				System.out.println("************************************ThreeOFKind**********************************");
+				log_game.addLog("The Winners In This Round: "+ result.toString()+ " with ThreeOFKind");
 				return result;
 			}
 			result = TwoPair();
 			if(result!= null && result.length !=0)
 			{
-				System.out.println("************************************TwoPair**********************************");
+				log_game.addLog("The Winners In This Round: "+ result.toString()+ " with TwoPair");
 				return result;
 			}
 			result = OnePair();
 			if(result!= null && result.length !=0)
 			{
-				System.out.println("************************************OnePair**********************************");
+				log_game.addLog("The Winners In This Round: "+ result.toString()+ " with OnePair");
 				return result;
 			}
 			result = HighCard();
-			System.out.println("************************************HighCard**********************************");
-			log_game.addLog("The Winners In This Round: "+ result.toString());
+			log_game.addLog("The Winners In This Round: "+ result.toString()+ " with HighCard"); 
 			return result;
 			
 		} 
@@ -793,12 +792,31 @@ public boolean isJoinAbleGame(UserInterface p){
 		players.forEach(a -> {a.GameUpdated(this);});
 
 	}
+	
 	public void SendMSG(String msg){
 		user_watches.forEach(a -> {a.SendMSG(msg);});
 		
 		players.forEach(a -> {a.SendMSG(msg);});
 
 	}
+	
+	public void WhisperMSG(String msg, String receiverID){
+		
+		for(Player p : this.players)
+			if(p.getUser().getID().equals(receiverID))
+			{
+				p.SendMSG(msg);
+				break;
+			}
+		for(Spectator sp : this.user_watches)
+			if(sp.getUser().getID().equals(receiverID))
+			{
+				sp.SendMSG(msg);
+				break;
+			}
+
+	}
+	
 	public void run() {
 		try {
 			ExchangeWaitingPlayers();

@@ -489,14 +489,21 @@ public class serviceLayer implements serviceLayerInterface {
         String[] requests = action.split(" ");
         if(requests[0].equals("CHATMSG") && requests.length >= 3){
       	  gameCenter.ChatMsg(requests[1], requests[2],action);
-      		  
-      		  
-      	  
-      	  
-      	  
+ 
         }  
-		
-		
+	}
+	
+	
+	/**
+	 * 
+	 * @param msg is string that has this format: "WHISPERMSG *GameID* *UserID* *reciverID* *MSG*"
+	 */
+	public void WhisperMsg(String msg)
+	{
+		String[] requests = msg.split(" ");
+        if(requests[0].equals("WHISPERMSG") && requests.length >= 4){
+      	  gameCenter.WhisperMsg(requests[1], requests[2], requests[3], msg);
+        }
 	}
 
 

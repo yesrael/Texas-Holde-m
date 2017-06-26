@@ -404,7 +404,21 @@ public class GameCenter implements GameCenterInterface{
 			
 			if(p.getUser().getID().equals(UserID)){
 				currentGame.SendMSG(MsgParts);
-				
+				break;
+			}
+			
+		}
+	}
+	
+	public void WhisperMsg(String GameID, String UserID, String receiverID, String MsgParts){
+		
+		Game currentGame = (Game) getGameByID(GameID);
+		if(currentGame!=null)
+		for(Player p:currentGame.getPlayers()){
+			
+			if(p.getUser().getID().equals(UserID)){
+				currentGame.WhisperMSG(MsgParts, receiverID);
+				break;
 			}
 			
 		}
