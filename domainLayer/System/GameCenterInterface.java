@@ -63,6 +63,7 @@ public interface GameCenterInterface {
 		 public boolean call(String userID, String gameID, int money);
 		public void ChatMsg(String string, String string2, String copyOfRange);
 		public void WhisperMsg(String gameID, String userID, String receiverID, String copyOfRange);
+		public String getGameReplay(String gameID);
 		 
 		 
 }

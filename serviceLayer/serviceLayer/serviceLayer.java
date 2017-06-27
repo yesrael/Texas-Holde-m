@@ -222,7 +222,7 @@ public class serviceLayer implements serviceLayerInterface {
 		  
 		 for (Game game: games){
 			 
-			 gameDetails=gameDetails +"GAMEID="+game.getGameID()+" ENDGAME "; 
+			 gameDetails=gameDetails +"GAMEID="+game.getGameID()+ " BUYIN="+game.getpreferences().getBuyInPolicy()+" SETS="+(game.getpreferences().getMaxPlayersNum()-game.getPlayerNumber()) +" ENDGAME "; 
 			 
 		 }
 		return gameDetails;
@@ -506,5 +506,18 @@ public class serviceLayer implements serviceLayerInterface {
         }
 	}
 
+	public String ReplayGame(String request)
+	{
+		String[] parts = request.split(" ");
+		   if(parts[0].equals("REPLAY") && parts.length == 2){
+			   String gameReplay=gameCenter.getGameReplay(parts[1]);
+			   if(gameReplay!=null)
+		        return "GAMEREPLAY "+ " "+parts[1]+ " "+gameReplay +" DONE";
+			   else 
+				 return "GAMEREPLAY FAILED Can't replay the game";
+		        }
+		   return "GAMEREPLAY FAILED Can't replay the game";
+	}
+	
 
 }

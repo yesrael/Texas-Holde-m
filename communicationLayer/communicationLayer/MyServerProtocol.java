@@ -177,6 +177,9 @@ public class MyServerProtocol implements ServerProtocol<String>{
 		else if(parts[0].equals("WHISPERMSG")){
         	serviceLayerr.WhisperMsg(msg);
 	   }
+		else if(parts[0].equals("REPLAY")){
+			callback.sendMessage(serviceLayerr.ReplayGame(msg));
+	   }
 		else
 			
 				callback.sendMessage("SYSMSG UNIDENTIFIED");

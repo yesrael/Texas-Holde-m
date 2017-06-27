@@ -219,6 +219,11 @@ public class GameCenter implements GameCenterInterface{
 	   GameInterface game = getGameByID(gameID);
 	   UserInterface user = getUser(UserID);
 	   if(game!=null && user !=null){
+		   if(game.getPlayerNumber()==0)
+		   {
+		   Thread th = new Thread((Game)game);
+		   th.start();
+		   }
 		   return game.joinGame(user);
 		   
 	   }
@@ -422,6 +427,14 @@ public class GameCenter implements GameCenterInterface{
 			}
 			
 		}
+	}
+	
+	public String getGameReplay(String gameID)
+	{
+		for(Game g: this.games)
+			if(g.getGameID().equals(gameID))
+				return g.getGameReplay();
+		return null;
 	}
 
 }
