@@ -867,8 +867,8 @@ public boolean isJoinAbleGame(UserInterface p){
 				
 				ExchangeWaitingPlayers();
 				GameUpated();
-				while(activePlayersNumber < this.preferences.getMinPlayersNum()) ExchangeWaitingPlayers();
-				while (activePlayersNumber >= this.preferences.getMinPlayersNum()){
+				while(activePlayersNumber == 1) ExchangeWaitingPlayers();
+				while (activePlayersNumber > 1){
 					ExchangeWaitingPlayers();
 					GameUpated();
 					initTableForNewTurn();
@@ -940,6 +940,7 @@ public boolean isJoinAbleGame(UserInterface p){
 			if(preferences.checkPlayer(ppp))
 			{activePlayers.add(ppp);
 			activePlayersNumber++;
+		//	System.out.println(ppp.getUser().getName());
 			}
 			else {
 				leaveGame(ppp.getUser());
