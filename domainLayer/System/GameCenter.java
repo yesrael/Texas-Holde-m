@@ -117,7 +117,7 @@ public class GameCenter implements GameCenterInterface{
 	   
 	   Game newGame = new Game(preferences, gameIdGen.getAndIncrement()+"");
 	   games.add(newGame);
-	   if(joinGame(newGame.getGameID(),UserID)) {
+	   if(firstJoinGame(newGame.getGameID(),UserID)) {
 		   Thread th = new Thread(newGame);
 		   th.start();
 		   return newGame.getGameID();
@@ -139,7 +139,7 @@ public class GameCenter implements GameCenterInterface{
 	  LinkedList<Game> can_join = new LinkedList<Game>();
 
 		  for(Game i_game : games){
-				 if(i_game.getpreferences().getGameTypePolicy()==GameType.POT_LIMIT && i_game.getpreferences().getLimit()==potSize){
+				 if(i_game.getpreferences().getGameTypePolicy()==GameType.POT_LIMIT && i_game.getpreferences().getLimit()==potSize && i_game.getPlayerNumber()>0){
 					  can_join.add(i_game);
 				 
 			  }}
@@ -153,7 +153,7 @@ public class GameCenter implements GameCenterInterface{
 	  LinkedList<Game> can_join = new LinkedList<Game>();
 
 		  for(Game i_game : games){
-				 if(userPrefs.checkEquality(i_game.getpreferences())){
+				 if(userPrefs.checkEquality(i_game.getpreferences()) && i_game.getPlayerNumber()>0){
 					  can_join.add(i_game);
 				 
 			  }
@@ -185,7 +185,7 @@ public class GameCenter implements GameCenterInterface{
 	   UserInterface user = getUser(UserID);
 	   LinkedList<Game> can_join = new LinkedList<Game>();
 	   for(Game game : games){
-		   if(game.isJoinAbleGame(user))
+		   if(game.isJoinAbleGame(user) && game.getPlayerNumber()>0)
 			   can_join.add(game);
 		   
 		   
@@ -198,7 +198,7 @@ public class GameCenter implements GameCenterInterface{
    public LinkedList<Game> listSpectatableGames(){
 	   LinkedList<Game> can_join = new LinkedList<Game>();
 	   for(Game game : games){
-		   if(game.getpreferences().isSpectatable())
+		   if(game.getpreferences().isSpectatable() && game.getPlayerNumber()>0)
 			   can_join.add(game);
 		   
 		   
@@ -222,10 +222,19 @@ public class GameCenter implements GameCenterInterface{
 	   if(game!=null && user !=null){
 		   if(game.getPlayerNumber()==0)
 		   {
-		   game.initializeGame();
-		   Thread th = new Thread((Game)game);
-		   th.start();
+		    return false;
 		   }
+		   return game.joinGame(user);
+		   
+	   }
+	   
+	   return false;
+   }
+   
+   private boolean firstJoinGame(String gameID, String UserID){
+	   GameInterface game = getGameByID(gameID);
+	   UserInterface user = getUser(UserID);
+	   if(game!=null && user !=null){
 		   return game.joinGame(user);
 		   
 	   }

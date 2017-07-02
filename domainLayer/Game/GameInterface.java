@@ -47,5 +47,4 @@ public interface GameInterface {
 		/**
 		 * 
 		 */
-		public void initializeGame();
 }

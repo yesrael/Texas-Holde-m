@@ -64,21 +64,7 @@ public class Game implements GameInterface, Runnable{
 		blindBit = 0;
 		playerToBet = new HashMap<Player,Integer>();
 	}
-	
-	public void initializeGame(){
-		isCalled = false;
-		CurrentPlayer = null;
-		activePlayers = new LinkedList<Player>();
-		players = new LinkedList<Player>();
-		deck = new Deck();
-		deck.shuffle();
-		activePlayersNumber = 0;
-		table = new Card[5];
-		cardsOnTable = 0;
-		blindBit = 0;
-		playerToBet = new HashMap<Player,Integer>();
-	}
-	
+
 	public int getPlayerNumber(){
 		return players.size();
 	}
@@ -881,8 +867,8 @@ public boolean isJoinAbleGame(UserInterface p){
 				
 				ExchangeWaitingPlayers();
 				GameUpated();
-				while(activePlayersNumber==1) ExchangeWaitingPlayers();
-				while (activePlayersNumber > 1){
+				while(activePlayersNumber < this.preferences.getMinPlayersNum()) ExchangeWaitingPlayers();
+				while (activePlayersNumber >= this.preferences.getMinPlayersNum()){
 					ExchangeWaitingPlayers();
 					GameUpated();
 					initTableForNewTurn();
