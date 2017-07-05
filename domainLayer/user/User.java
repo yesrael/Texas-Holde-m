@@ -228,7 +228,7 @@ public class User implements UserInterface {
 }
 	@Override
 	public boolean changeMoney(int money) {
-		if(totalCash  + money >0){
+		if(totalCash  + money >=0){
 		totalCash+=money;
 		return true;}
 		return false;

@@ -21,6 +21,7 @@ import user.UserStatus;
 public class GameCenter implements GameCenterInterface{
    private  ConcurrentLinkedQueue<User> users; 
    private ConcurrentLinkedQueue<Game> games;
+   private ConcurrentLinkedQueue<Game> inActiveGames;
 
    private final static Logger LOGGER = Logger.getLogger(GameCenter.class.getName());
    private AtomicInteger gameIdGen;
@@ -32,6 +33,7 @@ public class GameCenter implements GameCenterInterface{
    private GameCenter(){
 	   users = new ConcurrentLinkedQueue<User>();
 	   games= new ConcurrentLinkedQueue<Game>();
+	   inActiveGames = new ConcurrentLinkedQueue<Game>();
 	   gameIdGen = new AtomicInteger(1);
    }
    
@@ -117,7 +119,7 @@ public class GameCenter implements GameCenterInterface{
 	   
 	   Game newGame = new Game(preferences, gameIdGen.getAndIncrement()+"");
 	   games.add(newGame);
-	   if(firstJoinGame(newGame.getGameID(),UserID)) {
+	   if(joinGame(newGame.getGameID(),UserID)) {
 		   Thread th = new Thread(newGame);
 		   th.start();
 		   return newGame.getGameID();
@@ -153,11 +155,19 @@ public class GameCenter implements GameCenterInterface{
 	  LinkedList<Game> can_join = new LinkedList<Game>();
 
 		  for(Game i_game : games){
-				 if(userPrefs.checkEquality(i_game.getpreferences()) && i_game.getPlayerNumber()>0){
+				 if(userPrefs.checkEquality(i_game.getpreferences())){
 					  can_join.add(i_game);
 				 
 			  }
 				 }
+		  
+		  for(Game i_game : inActiveGames){
+				 if(userPrefs.checkEquality(i_game.getpreferences())){
+					  can_join.add(i_game);
+				 
+			  }
+				 }
+
 
 		  
 	  return  can_join;
@@ -169,6 +179,15 @@ public class GameCenter implements GameCenterInterface{
 	  LinkedList<Game> can_join = new LinkedList<Game>();
 
 		  for(Game i_game : games){			 
+			  Player[] p = i_game.getPlayers();
+			  for(Player pp : p){
+				 if(pp.getUser().getName().equals(name)){
+					  can_join.add(i_game);
+					  break;
+				 }
+			  }}
+		  
+		  for(Game i_game : inActiveGames){			 
 			  Player[] p = i_game.getPlayers();
 			  for(Player pp : p){
 				 if(pp.getUser().getName().equals(name)){
@@ -217,22 +236,7 @@ public class GameCenter implements GameCenterInterface{
    }
    
    public boolean joinGame(String gameID, String UserID){
-	   GameInterface game = getGameByID(gameID);
-	   UserInterface user = getUser(UserID);
-	   if(game!=null && user !=null){
-		   if(game.getPlayerNumber()==0)
-		   {
-		    return false;
-		   }
-		   return game.joinGame(user);
-		   
-	   }
-	   
-	   return false;
-   }
-   
-   private boolean firstJoinGame(String gameID, String UserID){
-	   GameInterface game = getGameByID(gameID);
+	   GameInterface game = getActiveGameByID(gameID);
 	   UserInterface user = getUser(UserID);
 	   if(game!=null && user !=null){
 		   return game.joinGame(user);
@@ -249,10 +253,26 @@ public class GameCenter implements GameCenterInterface{
 		     return game;
 		   
 	   }
+	   
+	   for(Game game : inActiveGames){
+		   if(game.getGameID().equals(gameID))
+		     return game;
+	   }
 	   return null;
 	   
 	   
    }
+   
+   public GameInterface getActiveGameByID(String gameID){
+	   for(Game game : games){
+		   if(game.getGameID().equals(gameID))
+		     return game;
+		   
+	   }
+	   return null;
+	   
+	   
+	   }
 
 	public boolean editUserPassword(String userID, String oldPassword, String newPassword) {
 		if(newPassword.isEmpty()) {
@@ -357,10 +377,19 @@ public class GameCenter implements GameCenterInterface{
 	
 	public boolean leaveGame(String GameID,String UserID){
 		
-		   Game game = (Game)getGameByID(GameID);
+		   Game game = (Game)getActiveGameByID(GameID);
 		   User user = getUser(UserID);
 		   user.actionMaked(GameID);
-           return game.leaveGame(user);
+		   
+		   boolean results= game.leaveGame(user);
+		   if(game.getPlayerNumber()==0)
+		   {
+		    int numberGames = games.size();
+		   	this.games.remove(game);
+		   	if (numberGames > games.size()) System.out.println("Game Deleted and it's InActive");
+		   	this.inActiveGames.add(game);
+		   }
+           return results;
 
 	}
 
@@ -374,7 +403,7 @@ public class GameCenter implements GameCenterInterface{
 	}
 
 	public boolean bet(String userID, String gameID, int money) {
-		GameInterface game = getGameByID(gameID);
+		GameInterface game = getActiveGameByID(gameID);
 		User user = getUser(userID);
 		if(game != null && user != null) {
 			return game.bet(user, money);
@@ -414,7 +443,7 @@ public class GameCenter implements GameCenterInterface{
 	
 	public void ChatMsg(String GameID, String UserID, String MsgParts){
 		
-		Game currentGame = (Game) getGameByID(GameID);
+		Game currentGame = (Game) getActiveGameByID(GameID);
 		String userType=null;
 		if(currentGame!=null)
 		for(Player p:currentGame.getPlayers()){
@@ -440,7 +469,7 @@ public class GameCenter implements GameCenterInterface{
 	
 	public void WhisperMsg(String GameID, String UserID, String receiverID, String MsgParts){
 		
-		Game currentGame = (Game) getGameByID(GameID);
+		Game currentGame = (Game) getActiveGameByID(GameID);
 		boolean isPlayer=false;
 		if(currentGame!=null)
 		for(Player p:currentGame.getPlayers()){
@@ -468,6 +497,11 @@ public class GameCenter implements GameCenterInterface{
 		for(Game g: this.games)
 			if(g.getGameID().equals(gameID))
 				return g.getGameReplay();
+		
+		for(Game g: this.inActiveGames)
+			if(g.getGameID().equals(gameID))
+				return g.getGameReplay();
+		
 		return null;
 	}
 

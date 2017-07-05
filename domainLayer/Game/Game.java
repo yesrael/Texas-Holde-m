@@ -876,8 +876,7 @@ public boolean isJoinAbleGame(UserInterface p){
 					oneTurn();
 					findWinnersAndGiveMoney();
 					GameUpated();
-	
-					
+					initForEndingTurn();
 					
 				}
 			}
@@ -935,20 +934,47 @@ public boolean isJoinAbleGame(UserInterface p){
 
 	public synchronized void ExchangeWaitingPlayers() {
 		activePlayers = new LinkedList<Player>();
+		LinkedList<Player> inActivePlayers = new LinkedList<Player>();
 		activePlayersNumber = 0;
 		for(Player ppp:players){
 			if(preferences.checkPlayer(ppp))
-			{activePlayers.add(ppp);
-			activePlayersNumber++;
-		//	System.out.println(ppp.getUser().getName());
+			{
+				activePlayers.add(ppp);
+			    activePlayersNumber++;
 			}
 			else {
-				leaveGame(ppp.getUser());
-				
+				 ppp.giveMoney(500);
+				 inActivePlayers.add(ppp);
 			}
 		}
+		if(inActivePlayers.size()>0)
+			for(Player ppp:inActivePlayers){
+				leaveGame(ppp.getUser());
+			}
+	}
+	
+	private synchronized void initForEndingTurn() {
 		
-	//	log_game.addLog(" Players Waiting for playing was Inserted To The list of The Active Players");
+		for(Player ppp:players)	
+	     ppp.giveCards(null, null);
+		deck = new Deck();
+		deck.shuffle();
+		cashOnTheTable = 0;
+		table = new Card[5];
+		cardsOnTable = 0;
+		GameUpated();
+		
+		activePlayers = new LinkedList<Player>();
+		activePlayersNumber = 0;
+		GameUpated();
+	
+		for(Player ppp:players){
+				if(ppp.getCash()>0)
+				{
+				  activePlayers.add(ppp);
+			      activePlayersNumber++;
+				}
+		}
 	}
 	
 	private void oneTurn() {
@@ -971,6 +997,18 @@ public boolean isJoinAbleGame(UserInterface p){
 				CurrentPlayer = current;
 				GameUpated();
 				if(RoundNumber != 0 && CurrentBet>0 && minumumBet == 0)break; 
+				if(RoundNumber != 0 && CurrentBet==0) 
+				{
+					boolean outOfCashPlayers=false;
+					for(Player ppp:activePlayers)
+						if(ppp.getCash()==0)
+						{
+							outOfCashPlayers=true;
+							break;
+						}
+					if(outOfCashPlayers)
+						break;
+				}
 					if(!current.takeAction(this.GameID, minBet)){
 						leaveGame(current.getUser());
 					}
@@ -997,9 +1035,9 @@ public boolean isJoinAbleGame(UserInterface p){
 		
 		GameUpated();
 		log_game.addLog("One Turn Done");
-
 		}
 
+	
 		@Override
 		public boolean equals(Object obj) {
 			Game game = (Game) obj;
